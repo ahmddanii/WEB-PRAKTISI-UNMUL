@@ -1,0 +1,27 @@
+body {
+            background-color: #FFFFFF;
+            color: #1a1c1c;
+            font-family: 'Hanken Grotesk', sans-serif;
+            overflow-x: hidden;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 32px;
+        }
+        .academic-card {
+            background-color: #FFFFFF;
+            border: 1px solid #e2e2e2;
+            transition: all 0.3s ease;
+        }
+        .academic-card:hover {
+            border-color: #203971;
+            box-shadow: 0 4px 20px rgba(32, 57, 113, 0.08);
+        }
+        .hero-gradient {
+            background: radial-gradient(circle at top right, rgba(134, 223, 202, 0.1), transparent 40%),
+                        radial-gradient(circle at bottom left, rgba(32, 57, 113, 0.05), transparent 40%);
+        }

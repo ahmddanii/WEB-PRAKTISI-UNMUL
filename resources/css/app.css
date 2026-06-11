@@ -1,0 +1,28 @@
+@import 'tailwindcss';
+
+@import url('https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap');
+
+/* Components */
+@import './components/navbar.css';
+@import './components/hero.css';
+@import './components/footer.css';
+@import './components/cards.css';
+@import './components/buttons.css';
+
+/* Pages */
+
+@theme {
+    --font-sans: 'Hanken Grotesk', sans-serif;
+}
+
+:root {
+    --navy: #203971;
+    --cyan: #86DFCA;
+    --red: #F32923;
+}
+
+body {
+    font-family: 'Hanken Grotesk', sans-serif;
+    background: #f9f9f9;
+}
