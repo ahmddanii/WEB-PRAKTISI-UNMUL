@@ -23,7 +23,7 @@
                 <span class="material-symbols-outlined text-[#203971] group-hover:scale-110 transition-transform">drafts</span>
             </div>
             <div class="text-4xl font-bold text-[#F32923]">{{ $totalBerita }}</div>
-            <div class="mt-2 text-[12px] text-gray-500 font-bold font-mono">Artikel dipublikasi</div>
+            <div class="mt-2 text-[12px] text-gray-500 font-bold font-mono">Berita dipublikasi</div>
         </div>
         
         <div class="academic-card p-6 rounded-xl group">

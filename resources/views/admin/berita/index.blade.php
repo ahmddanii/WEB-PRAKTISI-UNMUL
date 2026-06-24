@@ -12,7 +12,7 @@
             <span class="font-mono text-[12px] text-gray-500 uppercase tracking-wider">Total Berita</span>
             <div class="flex items-baseline gap-2 mt-2">
                 <span class="text-4xl font-bold text-[#203971]">{{ $totalBerita ?? 0 }}</span>
-                <span class="text-gray-600 text-sm font-medium">Artikel dipublikasi</span>
+                <span class="text-gray-600 text-sm font-medium">Berita dipublikasi</span>
             </div>
         </div>
     </div>
@@ -24,15 +24,21 @@
         
         <!-- Table Header & Actions -->
         <div class="p-6 border-b border-gray-200 flex flex-col md:flex-row justify-between items-start md:items-center bg-gray-50/50 gap-4">
-            <h4 class="text-xl font-bold text-[#203971]">Daftar Artikel</h4>
-            <div class="flex gap-2">
-                <!-- Nanti href ini diisi dengan route untuk form tambah berita -->
-                <a href="/admin/berita/create" class="bg-[#203971] text-white px-4 py-2 text-sm font-bold rounded flex items-center gap-2 hover:bg-[#152a55] transition-all">
+            <h4 class="text-xl font-bold text-[#203971]">Daftar Berita</h4>
+            
+            <div class="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+                <form action="/admin/berita" method="GET" class="relative flex items-center w-full sm:w-64">
+                    <span class="material-symbols-outlined absolute left-3 text-gray-400 text-[18px]">search</span>
+                    <input type="text" 
+                            name="search" 
+                            value="{{ request('search') }}" 
+                            placeholder="Cari judul berita..." 
+                            class="pl-9 pr-4 py-2 w-full border border-gray-300 rounded text-sm focus:outline-none focus:border-[#203971] focus:ring-1 focus:ring-[#203971] transition-all">
+                </form>
+
+                <a href="/admin/berita/create" class="bg-[#203971] text-white px-4 py-2 text-sm font-bold rounded flex items-center justify-center gap-2 hover:bg-[#152a55] transition-all whitespace-nowrap">
                     <span class="material-symbols-outlined text-sm">add</span> Buat Berita
                 </a>
-                <button class="p-2 border border-gray-300 rounded hover:bg-gray-100 transition-colors text-gray-600">
-                    <span class="material-symbols-outlined">filter_list</span>
-                </button>
             </div>
         </div>
 
@@ -41,7 +47,7 @@
             <table class="w-full text-left border-collapse">
                 <thead>
                     <tr class="font-mono text-[12px] text-gray-500 border-b border-gray-200 bg-gray-50 uppercase tracking-wider">
-                        <th class="px-6 py-4 font-semibold">Judul Artikel</th>
+                        <th class="px-6 py-4 font-semibold">Judul Berita</th>
                         <th class="px-6 py-4 font-semibold">Penulis</th>
                         <th class="px-6 py-4 font-semibold">Kategori</th>
                         <th class="px-6 py-4 font-semibold">Tanggal</th>
@@ -103,7 +109,7 @@
 
         <!-- Table Pagination Info -->
         <div class="p-6 bg-gray-50 flex flex-col md:flex-row justify-between items-center border-t border-gray-200 gap-4">
-            <span class="text-gray-500 font-mono text-[12px] uppercase tracking-wider">Menampilkan 1-10 dari 12 Artikel</span>
+            <span class="text-gray-500 font-mono text-[12px] uppercase tracking-wider">Menampilkan 1-10 dari 12 Berita</span>
             <div class="flex gap-2">
                 <button class="px-4 py-2 border border-gray-300 rounded bg-white hover:bg-gray-100 transition-colors text-sm font-bold text-gray-600">SEBELUMNYA</button>
                 <button class="px-4 py-2 border border-gray-300 rounded bg-white hover:bg-gray-100 transition-colors text-sm font-bold text-gray-600">SELANJUTNYA</button>

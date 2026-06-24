@@ -27,7 +27,7 @@
 
     @include('layouts.partials.admin_sidebar')
 
-    <main class="md:ml-64 h-screen overflow-y-auto custom-scrollbar bg-[#f9f9f9] transition-all duration-300 w-full md:w-auto">
+    <main class="md:ml-64 h-[100dvh] pb-10 overflow-y-auto custom-scrollbar bg-[#f9f9f9] transition-all duration-300 w-full md:w-auto">
         
         @include('layouts.partials.admin_topbar')
 

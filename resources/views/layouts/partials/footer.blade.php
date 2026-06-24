@@ -25,7 +25,7 @@
         </div>
         
         <div class="flex flex-col items-center pt-6 border-t border-white/10 justify-center text-center">
-            <p class="text-white/50 text-xs md:text-sm">© 2026 Universitas Mulawarman. All Rights Reserved.</p>
+            <p class="text-white/50 text-xs md:text-sm">© 2026 PRAKTISI. All Rights Reserved.</p>
         </div>
     </div>
 </footer>
