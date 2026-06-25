@@ -39,7 +39,7 @@ class JadwalController extends Controller
             'JUMAT'  => $waktuJumat,
         ];
 
-        return view('jadwal', compact('ruangans', 'ruanganAktif', 'hariJadwal', 'jadwalMapped'));
+        return inertia('Jadwal', compact('ruangans', 'ruanganAktif', 'hariJadwal', 'jadwalMapped'));
     }
     
     public function index(Request $request)
@@ -50,7 +50,7 @@ class JadwalController extends Controller
 
         $ruanganAktif = $request->ruangan_id ? Ruangan::findOrFail($request->ruangan_id) : Ruangan::first();
 
-        $jadwals = Jadwal::where('ruangan_id', $ruanganAktif->id)->get();
+        $jadwals = Jadwal::with(['kelas', 'matkul'])->where('ruangan_id', $ruanganAktif->id)->get();
         
         $jadwalMapped = [];
         foreach ($jadwals as $j) {
@@ -74,7 +74,7 @@ class JadwalController extends Controller
             'JUMAT'  => $waktuJumat,
         ];
 
-        return view('admin.jadwal.index', compact('ruangans', 'kelases', 'matkuls', 'ruanganAktif', 'hariJadwal', 'jadwalMapped'));
+        return inertia('Admin/Jadwal/Index', compact('ruangans', 'kelases', 'matkuls', 'ruanganAktif', 'hariJadwal', 'jadwalMapped'));
     }
 
     public function simpanMassal(Request $request)
@@ -112,7 +112,7 @@ class JadwalController extends Controller
     public function matkulIndex()
     {
         $matkuls = MataKuliah::orderBy('semester', 'asc')->get();
-        return view('admin.jadwal.matkul', compact('matkuls'));
+        return inertia('Admin/Jadwal/Matkul', compact('matkuls'));
     }
 
     public function matkulStore(Request $request)
@@ -136,7 +136,7 @@ class JadwalController extends Controller
     public function kelasIndex()
     {
         $kelases = KelasPraktikum::orderBy('angkatan', 'desc')->orderBy('kelas', 'asc')->get();
-        return view('admin.jadwal.kelas', compact('kelases'));
+        return inertia('Admin/Jadwal/Kelas', compact('kelases'));
     }
 
     public function kelasStore(Request $request)

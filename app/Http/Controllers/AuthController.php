@@ -10,7 +10,7 @@ class AuthController extends Controller
     // Menampilkan halaman login
     public function showLoginForm()
     {
-        return view('login');
+        return inertia('Login');
     }
 
     // Memproses data yang dikirim dari form login

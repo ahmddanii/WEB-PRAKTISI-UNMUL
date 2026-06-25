@@ -16,6 +16,6 @@ class DashboardController extends Controller
             'totalMatkul' => MataKuliah::count(),
         ];
 
-        return view('admin.dashboard', $data);
+        return inertia('Admin/Dashboard', $data);
     }
 }

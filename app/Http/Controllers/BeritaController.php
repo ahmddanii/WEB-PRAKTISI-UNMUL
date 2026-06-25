@@ -24,12 +24,12 @@ class BeritaController extends Controller
         
         $berita->appends(['search' => $request->search]);
 
-        return view('admin.berita.index', compact('berita', 'totalBerita'));
+        return inertia('Admin/Berita/Index', compact('berita', 'totalBerita'));
     }
 
     public function create()
     {
-        return view('admin.berita.create');
+        return inertia('Admin/Berita/Create');
     }
 
     public function store(Request $request)
@@ -63,7 +63,7 @@ class BeritaController extends Controller
     public function edit($id)
     {
         $berita = Berita::findOrFail($id);
-        return view('admin.berita.edit', compact('berita'));
+        return inertia('Admin/Berita/Edit', compact('berita'));
     }
 
     public function update(Request $request, $id)

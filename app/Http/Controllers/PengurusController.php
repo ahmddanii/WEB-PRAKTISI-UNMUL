@@ -16,7 +16,7 @@ class PengurusController extends Controller
         $koordinatorMatkul = KoordinatorMatkul::with('matkul')->latest()->get();
         $matkuls = MataKuliah::all(); // Diperlukan untuk dropdown pilihan mata kuliah
 
-        return view('admin.pengurus.index', compact('pengurusInti', 'koordinatorMatkul', 'matkuls'));
+        return inertia('Admin/Pengurus/Index', compact('pengurusInti', 'koordinatorMatkul', 'matkuls'));
     }
 
     public function storeInti(Request $request)

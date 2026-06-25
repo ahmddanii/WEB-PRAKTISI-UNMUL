@@ -11,11 +11,11 @@ use App\Models\Berita;
 // 1. ROUTE BERANDA PUBLIK
 Route::get('/', function () {
     $beritaTerbaru = Berita::latest()->take(3)->get();
-    return view('beranda', compact('beritaTerbaru'));
+    return inertia('Beranda', compact('beritaTerbaru'));
 });
 
 Route::get('/dokumen', function () {
-    return view('dokumen');
+    return inertia('Dokumen');
 })->name('dokumen');
 
 Route::get('/jadwal', [App\Http\Controllers\JadwalController::class, 'publicIndex'])->name('jadwal');
@@ -23,16 +23,16 @@ Route::get('/jadwal', [App\Http\Controllers\JadwalController::class, 'publicInde
 Route::get('/berita', function () {
     // Mengambil berita terbaru ke terlama, dibatasi 9 berita per halaman (pagination)
     $semuaBerita = \App\Models\Berita::latest()->paginate(9);
-    return view('berita', compact('semuaBerita'));
+    return inertia('Berita', compact('semuaBerita'));
 })->name('berita.semua');
 
 Route::get('/berita/{slug}', function ($slug) {
     $berita = Berita::where('slug', $slug)->firstOrFail();
-    return view('berita_detail', compact('berita'));
+    return inertia('BeritaDetail', compact('berita'));
 });
 
 Route::get('/kontak', function () {
-    return view('kontak');
+    return inertia('Kontak');
 })->name('kontak');
 
 // Route untuk halaman Tentang Kami
