@@ -40,7 +40,7 @@ Route::get('/tentang', function () {
     $pengurusInti = \App\Models\PengurusInti::orderBy('urutan', 'asc')->get();
     $koordinatorMatkul = \App\Models\KoordinatorMatkul::with('matkul')->latest()->get();
     
-    return view('tentang', compact('pengurusInti', 'koordinatorMatkul'));
+    return inertia('Tentang', compact('pengurusInti', 'koordinatorMatkul'));
 })->name('tentang');
 // 2. ROUTE GUEST
 Route::middleware('guest')->group(function () {
