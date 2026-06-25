@@ -34,7 +34,7 @@ export default function AdminLayout({ children, title, subtitle }: AdminLayoutPr
       <AdminSidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col min-h-screen overflow-hidden">
+      <div className="flex-1 flex flex-col min-h-screen overflow-hidden md:pl-64">
         {/* Topbar */}
         <AdminTopbar 
           title={title} 
