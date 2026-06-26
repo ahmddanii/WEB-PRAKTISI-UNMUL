@@ -55,11 +55,9 @@ Route::get('/pengajuan-surat/status/{id}/{token}', [PengajuanSuratController::cl
 Route::get('/pengajuan-surat/download/{id}/{token}', [PengajuanSuratController::class, 'downloadSurat'])->name('surat.download');
 
 // Route untuk Form Pengaduan & Aspirasi
-Route::get('/pengaduan', [PengaduanController::class, 'index'])->name('pengaduan.form');
+Route::get('/pengaduan', [PengaduanController::class, 'index'])->name('pengaduan.index');
 Route::post('/pengaduan', [PengaduanController::class, 'store'])->name('pengaduan.store');
-Route::post('/pengaduan/cek-status', [PengaduanController::class, 'checkStatus'])->name('pengaduan.check_status');
-Route::get('/pengaduan/status/{id}/{token}', [PengaduanController::class, 'showStatus'])->name('pengaduan.status');
-Route::get('/pengaduan/download/{id}/{token}', [PengaduanController::class, 'downloadLampiran'])->name('pengaduan.download');
+Route::get('/api/matkul-by-angkatan', [PengaduanController::class, 'matkulByAngkatan'])->name('api.matkul-by-angkatan');
 // 2. ROUTE GUEST
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
@@ -115,8 +113,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/admin/pengajuan-surat/{id}/file', [AdminPengajuanSuratController::class, 'downloadSurat'])->name('admin.surat.file');
 
     // Admin Pengaduan
+    Route::get('/admin/pengaduan/presentasi', [AdminPengaduanController::class, 'presentasi'])->name('admin.pengaduan.presentasi');
+    Route::get('/admin/pengaduan/presentasi/data', [AdminPengaduanController::class, 'presentasiData'])->name('admin.pengaduan.presentasi-data');
     Route::get('/admin/pengaduan', [AdminPengaduanController::class, 'index'])->name('admin.pengaduan.index');
     Route::get('/admin/pengaduan/{id}', [AdminPengaduanController::class, 'show'])->name('admin.pengaduan.show');
-    Route::post('/admin/pengaduan/{id}/respond', [AdminPengaduanController::class, 'respond'])->name('admin.pengaduan.respond');
+    Route::post('/admin/pengaduan/{id}/tandai-dibahas', [AdminPengaduanController::class, 'tandaiDibahas'])->name('admin.pengaduan.tandai-dibahas');
     Route::get('/admin/pengaduan/{id}/lampiran', [AdminPengaduanController::class, 'downloadLampiran'])->name('admin.pengaduan.lampiran');
 });
