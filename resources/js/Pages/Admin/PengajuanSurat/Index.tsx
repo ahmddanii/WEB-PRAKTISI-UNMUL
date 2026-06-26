@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Head, Link, router } from '@inertiajs/react';
 import AdminLayout from '../../../Layouts/AdminLayout';
 import Pagination from '../../../Components/Pagination';
@@ -10,7 +10,10 @@ interface PengajuanItem {
     nama: string;
     nim: string;
     email: string;
+    matkul: string;
+    kelas_sesi: string;
     tanggal_praktikum: string;
+    sesi_tujuan?: string;
     status: 'Menunggu' | 'Disetujui' | 'Ditolak';
     created_at: string;
 }
@@ -26,30 +29,36 @@ interface IndexProps {
     filters: {
         search?: string;
         status?: string;
-        jenis_surat?: string;
+        pindah_sesi?: string;
     };
 }
 
 export default function Index({ surats, filters }: IndexProps) {
     const [search, setSearch] = useState(filters.search || '');
     const [status, setStatus] = useState(filters.status || '');
-    const [jenisSurat, setJenisSurat] = useState(filters.jenis_surat || '');
+    const [pindahSesi, setPindahSesi] = useState(filters.pindah_sesi || '');
+
+    useEffect(() => {
+        setSearch(filters.search || '');
+        setStatus(filters.status || '');
+        setPindahSesi(filters.pindah_sesi || '');
+    }, [filters]);
 
     const handleSearchSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        applyFilters({ search, status, jenis_surat: jenisSurat });
+        applyFilters({ search, status, pindah_sesi: pindahSesi });
     };
 
     const handleStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const val = e.target.value;
         setStatus(val);
-        applyFilters({ search, status: val, jenis_surat: jenisSurat });
+        applyFilters({ search, status: val, pindah_sesi: pindahSesi });
     };
 
-    const handleJenisChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const handlePindahSesiChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const val = e.target.value;
-        setJenisSurat(val);
-        applyFilters({ search, status, jenis_surat: val });
+        setPindahSesi(val);
+        applyFilters({ search, status, pindah_sesi: val });
     };
 
     const applyFilters = (newFilters: any) => {
@@ -112,16 +121,16 @@ export default function Index({ surats, filters }: IndexProps) {
                             </select>
                         </div>
 
-                        {/* Filter Jenis Surat */}
+                        {/* Filter Pindah Sesi */}
                         <div>
                             <select
-                                value={jenisSurat}
-                                onChange={handleJenisChange}
+                                value={pindahSesi}
+                                onChange={handlePindahSesiChange}
                                 className="bg-white border border-gray-300 rounded p-2 text-xs focus:ring-2 focus:ring-[#203971] outline-none cursor-pointer"
                             >
-                                <option value="">Semua Jenis Surat</option>
-                                <option value="Izin Tidak Hadir">Izin Tidak Hadir</option>
-                                <option value="Pindah Sesi">Pindah Sesi</option>
+                                <option value="">Semua Pengajuan</option>
+                                <option value="ya">Hanya Pindah Sesi</option>
+                                <option value="tidak">Tanpa Pindah Sesi</option>
                             </select>
                         </div>
                     </div>
@@ -134,7 +143,8 @@ export default function Index({ surats, filters }: IndexProps) {
                             <tr className="bg-gray-50 border-b border-gray-200">
                                 <th className="p-4 font-mono text-xs font-bold text-gray-500 tracking-wider">NOMOR</th>
                                 <th className="p-4 font-mono text-xs font-bold text-gray-500 tracking-wider">MAHASISWA</th>
-                                <th className="p-4 font-mono text-xs font-bold text-gray-500 tracking-wider">JENIS SURAT</th>
+                                <th className="p-4 font-mono text-xs font-bold text-gray-500 tracking-wider">MATA KULIAH</th>
+                                <th className="p-4 font-mono text-xs font-bold text-gray-500 tracking-wider text-center">PINDAH SESI</th>
                                 <th className="p-4 font-mono text-xs font-bold text-gray-500 tracking-wider">TGL PRAKTIKUM</th>
                                 <th className="p-4 font-mono text-xs font-bold text-gray-500 tracking-wider">STATUS</th>
                                 <th className="p-4 font-mono text-xs font-bold text-gray-500 tracking-wider text-center">AKSI</th>
@@ -151,7 +161,23 @@ export default function Index({ surats, filters }: IndexProps) {
                                                 <p className="text-xs font-mono text-gray-500">{surat.nim} &bull; {surat.email}</p>
                                             </div>
                                         </td>
-                                        <td className="p-4 text-xs font-medium text-gray-600">{surat.jenis_surat}</td>
+                                        <td className="p-4">
+                                            <div>
+                                                <p className="text-xs font-semibold text-gray-700">{surat.matkul}</p>
+                                                <p className="text-[10px] text-gray-400 font-mono">{surat.kelas_sesi}</p>
+                                            </div>
+                                        </td>
+                                        <td className="p-4 text-center">
+                                            {surat.sesi_tujuan ? (
+                                                <span className="inline-flex items-center gap-1 bg-emerald-50 text-emerald-700 border border-emerald-200 px-2.5 py-0.5 rounded text-[10px] font-bold">
+                                                    <span className="material-symbols-outlined text-[10px] block">check_circle</span> YA
+                                                </span>
+                                            ) : (
+                                                <span className="inline-flex items-center bg-gray-50 text-gray-400 border border-gray-200 px-2 py-0.5 rounded text-[10px] font-bold">
+                                                    — TIDAK
+                                                </span>
+                                            )}
+                                        </td>
                                         <td className="p-4 text-xs font-mono text-gray-600">
                                             {new Date(surat.tanggal_praktikum).toLocaleDateString('id-ID', {
                                                 year: 'numeric',
@@ -176,7 +202,7 @@ export default function Index({ surats, filters }: IndexProps) {
                                 ))
                             ) : (
                                 <tr>
-                                    <td colSpan={6} className="p-8 text-center text-gray-500 italic">
+                                    <td colSpan={7} className="p-8 text-center text-gray-500 italic">
                                         Tidak ada data pengajuan surat yang ditemukan.
                                     </td>
                                 </tr>
