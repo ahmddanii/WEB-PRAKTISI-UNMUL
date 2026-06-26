@@ -11,20 +11,23 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('pengaduans', function (Blueprint $table) {
+        Schema::create('pengaduan', function (Blueprint $table) {
             $table->id();
-            $table->string('nomor_tiket')->nullable()->unique();
-            $table->string('kategori');
-            $table->string('nama');
-            $table->string('nim');
-            $table->string('email');
-            $table->string('no_hp')->nullable();
-            $table->string('matkul_terkait')->nullable();
-            $table->string('judul');
-            $table->text('isi');
-            $table->string('lampiran')->nullable();
-            $table->string('status')->default('Baru'); // Baru, Diproses, Selesai
-            $table->text('respons')->nullable();
+            $table->enum('kategori', ['keluhan', 'saran', 'pertanyaan', 'lainnya']);
+            $table->year('angkatan');
+            $table->foreignId('mata_kuliah_id')->nullable()->constrained('mata_kuliah')->nullOnDelete();
+            $table->text('isi_pengaduan');
+            $table->string('file_lampiran')->nullable();
+
+            // Identitas opsional
+            $table->string('nama_pelapor', 100)->nullable();
+            $table->string('nim_pelapor', 20)->nullable();
+
+            // Status rapat
+            $table->enum('status', ['baru', 'sudah_dibahas'])->default('baru');
+            $table->timestamp('dibahas_at')->nullable();
+            $table->foreignId('dibahas_oleh')->nullable()->constrained('users')->nullOnDelete();
+
             $table->timestamps();
         });
     }
@@ -34,6 +37,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('pengaduans');
+        Schema::dropIfExists('pengaduan');
     }
 };
