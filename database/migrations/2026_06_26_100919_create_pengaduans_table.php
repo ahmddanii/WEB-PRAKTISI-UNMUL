@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('pengaduan', function (Blueprint $table) {
             $table->id();
-            $table->enum('kategori', ['keluhan', 'saran', 'pertanyaan', 'lainnya']);
+            $table->enum('kategori', ['pengaduan', 'aspirasi']);
             $table->year('angkatan');
             $table->foreignId('mata_kuliah_id')->nullable()->constrained('mata_kuliah')->nullOnDelete();
             $table->text('isi_pengaduan');
