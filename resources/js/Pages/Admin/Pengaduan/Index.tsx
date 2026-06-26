@@ -6,12 +6,16 @@ import Pagination from '../../../Components/Pagination';
 interface PengaduanItem {
     id: number;
     nomor_tiket: string;
-    kategori: string;
-    nama: string;
-    nim: string;
-    email: string;
-    judul: string;
-    status: 'Baru' | 'Diproses' | 'Selesai';
+    kategori: 'keluhan' | 'saran' | 'pertanyaan' | 'lainnya';
+    kategori_label: string;
+    angkatan: number;
+    mata_kuliah?: {
+        id: number;
+        nama_mk: string;
+    };
+    pelapor: string;
+    isi_pengaduan: string;
+    status: 'baru' | 'sudah_dibahas';
     created_at: string;
 }
 
@@ -27,6 +31,7 @@ interface IndexProps {
         search?: string;
         status?: string;
         kategori?: string;
+        angkatan?: string;
     };
 }
 
@@ -34,22 +39,32 @@ export default function Index({ pengaduans, filters }: IndexProps) {
     const [search, setSearch] = useState(filters.search || '');
     const [status, setStatus] = useState(filters.status || '');
     const [kategori, setKategori] = useState(filters.kategori || '');
+    const [angkatan, setAngkatan] = useState(filters.angkatan || '');
+
+    const currentYear = new Date().getFullYear();
+    const angkatanList = Array.from({ length: 5 }, (_, i) => currentYear - i);
 
     const handleSearchSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        applyFilters({ search, status, kategori });
+        applyFilters({ search, status, kategori, angkatan });
     };
 
     const handleStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const val = e.target.value;
         setStatus(val);
-        applyFilters({ search, status: val, kategori });
+        applyFilters({ search, status: val, kategori, angkatan });
     };
 
     const handleKategoriChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const val = e.target.value;
         setKategori(val);
-        applyFilters({ search, status, kategori: val });
+        applyFilters({ search, status, kategori: val, angkatan });
+    };
+
+    const handleAngkatanChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const val = e.target.value;
+        setAngkatan(val);
+        applyFilters({ search, status, kategori, angkatan: val });
     };
 
     const applyFilters = (newFilters: any) => {
@@ -61,43 +76,61 @@ export default function Index({ pengaduans, filters }: IndexProps) {
 
     const getStatusStyle = (status: string) => {
         switch (status) {
-            case 'Selesai':
+            case 'sudah_dibahas':
                 return 'bg-emerald-50 text-emerald-700 border border-emerald-200';
-            case 'Diproses':
-                return 'bg-amber-50 text-amber-700 border border-amber-200';
-            default: // Baru
+            default: // baru
                 return 'bg-blue-50 text-blue-700 border border-blue-200';
         }
     };
 
     const getKategoriStyle = (kategori: string) => {
         switch (kategori) {
-            case 'Keluhan':
+            case 'keluhan':
                 return 'bg-rose-50 text-rose-700 border border-rose-100';
-            case 'Saran':
+            case 'saran':
                 return 'bg-teal-50 text-teal-700 border border-teal-100';
-            case 'Pertanyaan':
+            case 'pertanyaan':
                 return 'bg-indigo-50 text-indigo-700 border border-indigo-100';
             default:
                 return 'bg-gray-50 text-gray-700 border border-gray-100';
         }
     };
 
+    // Serialize filters for presentation mode URL
+    const getPresentasiUrl = () => {
+        const params = new URLSearchParams();
+        if (search) params.append('search', search);
+        if (status) params.append('status', status);
+        if (kategori) params.append('kategori', kategori);
+        if (angkatan) params.append('angkatan', angkatan);
+        return `/admin/pengaduan/presentasi?${params.toString()}`;
+    };
+
     return (
         <AdminLayout
             title="Pengaduan & Aspirasi"
-            subtitle="Tinjau keluhan, saran, dan pertanyaan mahasiswa serta berikan tanggapan."
+            subtitle="Kumpulkan masukan mahasiswa untuk bahan rapat evaluasi aslab."
         >
             <Head title="Manajemen Pengaduan & Aspirasi" />
 
             <section className="p-8">
                 
+                {/* Upper bar with presentation button */}
+                <div className="flex justify-end mb-6">
+                    <Link
+                        href={getPresentasiUrl()}
+                        className="inline-flex items-center gap-2 bg-[#203971] hover:bg-[#152a55] text-white px-5 py-2.5 rounded-lg text-xs font-bold font-mono tracking-widest transition-all shadow-sm cursor-pointer hover:-translate-y-0.5"
+                    >
+                        <span className="material-symbols-outlined text-sm">co_present</span> MODE PRESENTASI RAPAT
+                    </Link>
+                </div>
+
                 {/* Search & Filters */}
-                <div className="bg-white p-5 rounded-lg border border-gray-200 shadow-sm mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div className="bg-white p-5 rounded-lg border border-gray-200 shadow-sm mb-6 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
                     <form onSubmit={handleSearchSubmit} className="flex items-center gap-2 flex-1 max-w-md">
                         <input
                             type="text"
-                            placeholder="Cari nama, NIM, judul, atau nomor tiket..."
+                            placeholder="Cari pelapor, NIM, atau isi pengaduan..."
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
                             className="w-full bg-white border border-gray-300 rounded p-2 text-xs focus:ring-2 focus:ring-[#203971] outline-none"
@@ -110,7 +143,7 @@ export default function Index({ pengaduans, filters }: IndexProps) {
                         </button>
                     </form>
 
-                    <div className="flex items-center gap-3">
+                    <div className="flex flex-wrap items-center gap-3">
                         {/* Filter Status */}
                         <div>
                             <select
@@ -119,9 +152,8 @@ export default function Index({ pengaduans, filters }: IndexProps) {
                                 className="bg-white border border-gray-300 rounded p-2 text-xs focus:ring-2 focus:ring-[#203971] outline-none cursor-pointer"
                             >
                                 <option value="">Semua Status</option>
-                                <option value="Baru">Baru</option>
-                                <option value="Diproses">Diproses</option>
-                                <option value="Selesai">Selesai</option>
+                                <option value="baru">Baru (Belum Dibahas)</option>
+                                <option value="sudah_dibahas">Sudah Dibahas</option>
                             </select>
                         </div>
 
@@ -133,10 +165,26 @@ export default function Index({ pengaduans, filters }: IndexProps) {
                                 className="bg-white border border-gray-300 rounded p-2 text-xs focus:ring-2 focus:ring-[#203971] outline-none cursor-pointer"
                             >
                                 <option value="">Semua Kategori</option>
-                                <option value="Keluhan">Keluhan</option>
-                                <option value="Saran">Saran</option>
-                                <option value="Pertanyaan">Pertanyaan</option>
-                                <option value="Lainnya">Lainnya</option>
+                                <option value="keluhan">Keluhan</option>
+                                <option value="saran">Saran</option>
+                                <option value="pertanyaan">Pertanyaan</option>
+                                <option value="lainnya">Lainnya</option>
+                            </select>
+                        </div>
+
+                        {/* Filter Angkatan */}
+                        <div>
+                            <select
+                                value={angkatan}
+                                onChange={handleAngkatanChange}
+                                className="bg-white border border-gray-300 rounded p-2 text-xs focus:ring-2 focus:ring-[#203971] outline-none cursor-pointer"
+                            >
+                                <option value="">Semua Angkatan</option>
+                                {angkatanList.map((yr) => (
+                                    <option key={yr} value={yr}>
+                                        Angkatan {yr}
+                                    </option>
+                                ))}
                             </select>
                         </div>
                     </div>
@@ -150,7 +198,7 @@ export default function Index({ pengaduans, filters }: IndexProps) {
                                 <th className="p-4 font-mono text-xs font-bold text-gray-500 tracking-wider">TIKET</th>
                                 <th className="p-4 font-mono text-xs font-bold text-gray-500 tracking-wider">MAHASISWA</th>
                                 <th className="p-4 font-mono text-xs font-bold text-gray-500 tracking-wider">KATEGORI</th>
-                                <th className="p-4 font-mono text-xs font-bold text-gray-500 tracking-wider">JUDUL ASPIRASI</th>
+                                <th className="p-4 font-mono text-xs font-bold text-gray-500 tracking-wider">ANGKATAN / MATKUL</th>
                                 <th className="p-4 font-mono text-xs font-bold text-gray-500 tracking-wider">STATUS</th>
                                 <th className="p-4 font-mono text-xs font-bold text-gray-500 tracking-wider text-center">AKSI</th>
                             </tr>
@@ -162,19 +210,32 @@ export default function Index({ pengaduans, filters }: IndexProps) {
                                         <td className="p-4 text-xs font-bold font-mono text-[#203971]">{pengaduan.nomor_tiket}</td>
                                         <td className="p-4">
                                             <div>
-                                                <p className="text-sm font-bold text-gray-800">{pengaduan.nama}</p>
-                                                <p className="text-xs font-mono text-gray-500">{pengaduan.nim} &bull; {pengaduan.email}</p>
+                                                <p className="text-sm font-bold text-gray-800">{pengaduan.pelapor}</p>
+                                                <p className="text-xs font-mono text-gray-400">
+                                                    {new Date(pengaduan.created_at).toLocaleDateString('id-ID', {
+                                                        year: 'numeric',
+                                                        month: 'short',
+                                                        day: 'numeric'
+                                                    })}
+                                                </p>
                                             </div>
                                         </td>
                                         <td className="p-4">
-                                            <span className={`px-2 py-0.5 text-[10px] font-bold rounded ${getKategoriStyle(pengaduan.kategori)}`}>
-                                                {pengaduan.kategori}
+                                            <span className={`px-2 py-0.5 text-[10px] font-bold rounded capitalize ${getKategoriStyle(pengaduan.kategori)}`}>
+                                                {pengaduan.kategori_label}
                                             </span>
                                         </td>
-                                        <td className="p-4 text-xs font-medium text-gray-800 truncate max-w-xs">{pengaduan.judul}</td>
+                                        <td className="p-4">
+                                            <div>
+                                                <p className="text-xs font-semibold text-gray-700">Angkatan {pengaduan.angkatan}</p>
+                                                <p className="text-[11px] text-[#203971] font-mono truncate max-w-xs">
+                                                    {pengaduan.mata_kuliah ? pengaduan.mata_kuliah.nama_mk : 'Umum / Tidak spesifik'}
+                                                </p>
+                                            </div>
+                                        </td>
                                         <td className="p-4">
                                             <span className={`px-2.5 py-1 text-[10px] font-black font-mono tracking-wider rounded-full uppercase ${getStatusStyle(pengaduan.status)}`}>
-                                                {pengaduan.status}
+                                                {pengaduan.status === 'sudah_dibahas' ? 'SUDAH DIBAHAS' : 'BARU'}
                                             </span>
                                         </td>
                                         <td className="p-4 text-center">
