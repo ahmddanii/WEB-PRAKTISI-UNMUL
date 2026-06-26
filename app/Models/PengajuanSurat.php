@@ -26,11 +26,19 @@ class PengajuanSurat extends Model
         'status',
         'catatan',
         'token',
+        'diproses_oleh',
+        'diproses_at',
     ];
 
     protected $casts = [
         'tanggal_praktikum' => 'date',
+        'diproses_at' => 'datetime',
     ];
+
+    public function diprosesOleh()
+    {
+        return $this->belongsTo(User::class, 'diproses_oleh');
+    }
 
     /**
      * Generate secure token for download link based on ID, NIM, and APP_KEY.
