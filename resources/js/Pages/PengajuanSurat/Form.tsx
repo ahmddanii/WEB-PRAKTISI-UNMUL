@@ -9,6 +9,8 @@ export default function Form() {
     const [showSuccessModal, setShowSuccessModal] = useState(false);
     const [jadwalList, setJadwalList] = useState<{ value: string; label: string }[]>([]);
     const [loadingJadwal, setLoadingJadwal] = useState(false);
+    const [matkulList, setMatkulList] = useState<{ id: number; nama_mk: string }[]>([]);
+    const [loadingMatkul, setLoadingMatkul] = useState(false);
 
     const formCreate = useForm({
         nama: '',
@@ -30,17 +32,66 @@ export default function Form() {
         }
     }, [successPengajuan]);
 
-    // Fetch available schedules when toggle is checked
+    // Fetch courses dynamically when NIM changes (extracting batch/angkatan)
+    useEffect(() => {
+        const nimText = formCreate.data.nim.trim();
+        if (nimText.length < 2) {
+            setMatkulList([]);
+            formCreate.setData('matkul', '');
+            return;
+        }
+
+        const twoDigits = nimText.substring(0, 2);
+        // Check if twoDigits are numbers
+        if (!/^\d{2}$/.test(twoDigits)) {
+            setMatkulList([]);
+            formCreate.setData('matkul', '');
+            return;
+        }
+
+        const angkatan = '20' + twoDigits;
+        setLoadingMatkul(true);
+        fetch(`/api/matkul-by-angkatan?angkatan=${angkatan}`)
+            .then((res) => {
+                if (!res.ok) throw new Error('Failed to load courses');
+                return res.json();
+            })
+            .then((data) => {
+                setMatkulList(data);
+                setLoadingMatkul(false);
+                
+                // If current selected matkul is not in the new course list, reset it
+                const exists = data.some((m: any) => m.nama_mk === formCreate.data.matkul);
+                if (!exists) {
+                    formCreate.setData('matkul', '');
+                }
+            })
+            .catch((err) => {
+                console.error(err);
+                setLoadingMatkul(false);
+                setMatkulList([]);
+                formCreate.setData('matkul', '');
+            });
+    }, [formCreate.data.nim]);
+
+    // Fetch available schedules when toggle is checked and course is selected
     useEffect(() => {
         if (!formCreate.data.request_pindah_sesi) {
             formCreate.setData('sesi_tujuan', '');
+            setJadwalList([]);
+            return;
+        }
+
+        if (!formCreate.data.matkul) {
+            formCreate.setData('sesi_tujuan', '');
+            setJadwalList([]);
             return;
         }
 
         setLoadingJadwal(true);
-        fetch('/api/jadwal-tersedia')
+        fetch(`/api/jadwal-tersedia?matkul=${encodeURIComponent(formCreate.data.matkul)}`)
             .then((res) => {
-                if (!res.ok) throw new Error('Failed to load');
+                if (!res.ok) throw new Error('Failed to load schedules');
                 return res.json();
             })
             .then((data) => {
@@ -50,8 +101,9 @@ export default function Form() {
             .catch((err) => {
                 console.error(err);
                 setLoadingJadwal(false);
+                setJadwalList([]);
             });
-    }, [formCreate.data.request_pindah_sesi]);
+    }, [formCreate.data.request_pindah_sesi, formCreate.data.matkul]);
 
     const handleCreateSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -160,14 +212,30 @@ export default function Form() {
                                 {/* Mata Kuliah */}
                                 <div className="md:col-span-2">
                                     <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Mata Kuliah Praktikum</label>
-                                    <input
-                                        type="text"
+                                    <select
                                         value={formCreate.data.matkul}
                                         onChange={(e) => formCreate.setData('matkul', e.target.value)}
                                         required
-                                        placeholder="Cth: Pemrograman Berbasis Web"
-                                        className="w-full bg-white border border-gray-300 rounded-lg p-3 text-sm focus:ring-2 focus:ring-[#203971] outline-none"
-                                    />
+                                        disabled={formCreate.data.nim.trim().length < 2 || loadingMatkul}
+                                        className="w-full bg-white border border-gray-300 rounded-lg p-3 text-sm focus:ring-2 focus:ring-[#203971] outline-none cursor-pointer disabled:bg-gray-50 disabled:cursor-not-allowed disabled:text-gray-400"
+                                    >
+                                        {formCreate.data.nim.trim().length < 2 ? (
+                                            <option value="">Masukkan NIM terlebih dahulu</option>
+                                        ) : loadingMatkul ? (
+                                            <option value="">Memuat mata kuliah...</option>
+                                        ) : matkulList.length === 0 ? (
+                                            <option value="">Tidak ada mata kuliah ditemukan untuk angkatan Anda</option>
+                                        ) : (
+                                            <>
+                                                <option value="">Pilih Mata Kuliah Praktikum</option>
+                                                {matkulList.map((m) => (
+                                                    <option key={m.id} value={m.nama_mk}>
+                                                        {m.nama_mk}
+                                                    </option>
+                                                ))}
+                                            </>
+                                        )}
+                                    </select>
                                     {formCreate.errors.matkul && (
                                         <span className="text-red-500 text-xs mt-1 block">{formCreate.errors.matkul}</span>
                                     )}
@@ -231,16 +299,25 @@ export default function Form() {
                                         value={formCreate.data.sesi_tujuan}
                                         onChange={(e) => formCreate.setData('sesi_tujuan', e.target.value)}
                                         required={formCreate.data.request_pindah_sesi}
-                                        className="w-full bg-white border border-gray-300 rounded-lg p-3 text-sm focus:ring-2 focus:ring-[#203971] outline-none cursor-pointer"
+                                        disabled={!formCreate.data.matkul || loadingJadwal}
+                                        className="w-full bg-white border border-gray-300 rounded-lg p-3 text-sm focus:ring-2 focus:ring-[#203971] outline-none cursor-pointer disabled:bg-gray-100 disabled:cursor-not-allowed"
                                     >
-                                        <option value="">
-                                            {loadingJadwal ? 'Memuat jadwal kelas...' : 'Pilih jadwal sesi tujuan'}
-                                        </option>
-                                        {jadwalList.map((item) => (
-                                            <option key={item.value} value={item.label}>
-                                                {item.label}
-                                            </option>
-                                        ))}
+                                        {!formCreate.data.matkul ? (
+                                            <option value="">Pilih mata kuliah terlebih dahulu</option>
+                                        ) : loadingJadwal ? (
+                                            <option value="">Memuat jadwal kelas...</option>
+                                        ) : jadwalList.length === 0 ? (
+                                            <option value="">Tidak ada jadwal pindahan/susulan yang tersedia</option>
+                                        ) : (
+                                            <>
+                                                <option value="">Pilih jadwal sesi tujuan</option>
+                                                {jadwalList.map((item) => (
+                                                    <option key={item.value} value={item.label}>
+                                                        {item.label}
+                                                    </option>
+                                                ))}
+                                            </>
+                                        )}
                                     </select>
                                     {formCreate.errors.sesi_tujuan && (
                                         <span className="text-red-500 text-xs mt-1 block">{formCreate.errors.sesi_tujuan}</span>
@@ -266,10 +343,11 @@ export default function Form() {
 
                             {/* File Bukti */}
                             <div>
-                                <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Dokumen Bukti Pendukung (Opsional)</label>
+                                <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Dokumen Bukti Pendukung (Wajib)</label>
                                 <input
                                     type="file"
                                     accept=".pdf,image/*"
+                                    required
                                     onChange={(e) => {
                                         if (e.target.files && e.target.files.length > 0) {
                                             formCreate.setData('file_bukti', e.target.files[0]);
@@ -277,7 +355,7 @@ export default function Form() {
                                     }}
                                     className="w-full text-sm text-gray-500 file:mr-4 file:py-2.5 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-[#203971]/10 file:text-[#203971] hover:file:bg-[#203971]/20 cursor-pointer"
                                 />
-                                <p className="text-[11px] text-gray-400 mt-1">Format file: .pdf, .jpg, .jpeg, .png (Maks 2MB)</p>
+                                <p className="text-[11px] text-gray-400 mt-1">Format file: .pdf, .jpg, .jpeg, .png (Maks 2MB) &bull; Berkas ini wajib diunggah.</p>
                                 {formCreate.errors.file_bukti && (
                                     <span className="text-red-500 text-xs mt-1 block">{formCreate.errors.file_bukti}</span>
                                 )}

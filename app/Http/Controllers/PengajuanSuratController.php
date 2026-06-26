@@ -34,7 +34,7 @@ class PengajuanSuratController extends Controller
             'kelas_sesi' => 'required|string|max:100', // Kelas/Sesi Saat Ini (Wajib)
             'tanggal_praktikum' => 'required|date',
             'alasan' => 'required|string|max:1000',
-            'file_bukti' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
+            'file_bukti' => 'required|file|mimes:pdf,jpg,jpeg,png|max:2048',
             'request_pindah_sesi' => 'nullable|boolean',
         ];
 
@@ -94,10 +94,18 @@ class PengajuanSuratController extends Controller
     /**
      * Fetch available schedules dynamically from jadwal table.
      */
-    public function jadwalTersedia()
+    public function jadwalTersedia(Request $request)
     {
-        $jadwal = Jadwal::with(['matkul', 'kelas', 'ruangan'])
-            ->get()
+        $query = Jadwal::with(['matkul', 'kelas', 'ruangan']);
+
+        if ($request->filled('matkul')) {
+            $matkulName = $request->matkul;
+            $query->whereHas('matkul', function ($q) use ($matkulName) {
+                $q->where('nama_mk', $matkulName);
+            });
+        }
+
+        $jadwal = $query->get()
             ->map(fn($j) => [
                 'value' => ($j->kelas && $j->ruangan)
                     ? "{$j->kelas->kelas} — {$j->hari}, {$j->jam_mulai} ({$j->ruangan->nama_ruangan})"
