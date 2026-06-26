@@ -63,10 +63,8 @@ class Pengaduan extends Model
     public function getKategoriLabelAttribute(): string
     {
         return match($this->kategori) {
-            'keluhan'    => 'Keluhan',
-            'saran'      => 'Saran',
-            'pertanyaan' => 'Pertanyaan',
-            'lainnya'    => 'Lainnya',
+            'pengaduan'  => 'Pengaduan',
+            'aspirasi'   => 'Aspirasi / Masukan',
             default      => '-',
         };
     }
