@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\PengajuanSurat;
+use App\Models\Jadwal;
 use App\Mail\SuratSubmitted;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
@@ -25,26 +26,39 @@ class PengajuanSuratController extends Controller
     public function store(Request $request)
     {
         $rules = [
-            'jenis_surat' => 'required|in:Izin Tidak Hadir,Pindah Sesi',
             'nama' => 'required|string|max:100',
             'nim' => 'required|string|max:20',
             'email' => 'required|email|max:100',
             'no_hp' => 'nullable|string|max:20',
             'matkul' => 'required|string|max:150',
-            'kelas_sesi' => 'nullable|string|max:100',
+            'kelas_sesi' => 'required|string|max:100', // Kelas/Sesi Saat Ini (Wajib)
             'tanggal_praktikum' => 'required|date',
             'alasan' => 'required|string|max:1000',
             'file_bukti' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
+            'request_pindah_sesi' => 'nullable|boolean',
         ];
 
-        if ($request->jenis_surat === 'Pindah Sesi') {
-            $rules['sesi_asal'] = 'required|string|max:50';
-            $rules['sesi_tujuan'] = 'required|string|max:50';
+        // Jika pindah sesi dicentang, sesi_tujuan wajib diisi
+        if ($request->boolean('request_pindah_sesi')) {
+            $rules['sesi_tujuan'] = 'required|string|max:255';
         }
 
         $request->validate($rules);
 
-        $data = $request->except(['file_bukti']);
+        $data = [
+            'jenis_surat' => 'Izin Tidak Hadir', // jenis tunggal
+            'nama' => $request->nama,
+            'nim' => $request->nim,
+            'email' => $request->email,
+            'no_hp' => $request->no_hp,
+            'matkul' => $request->matkul,
+            'kelas_sesi' => $request->kelas_sesi,
+            'tanggal_praktikum' => $request->tanggal_praktikum,
+            'alasan' => $request->alasan,
+            'status' => 'Menunggu',
+            'sesi_asal' => $request->kelas_sesi, // default sesi asal adalah kelas_sesi
+            'sesi_tujuan' => $request->boolean('request_pindah_sesi') ? $request->sesi_tujuan : null,
+        ];
 
         if ($request->hasFile('file_bukti')) {
             // Stored in secure storage/app/private/bukti
@@ -61,60 +75,39 @@ class PengajuanSuratController extends Controller
             'token' => $pengajuan->generateToken()
         ]);
 
-        // Send email confirmation
+        // Send email confirmation (Konfirmasi Terima)
         try {
             Mail::to($pengajuan->email)->send(new SuratSubmitted($pengajuan));
         } catch (\Exception $e) {
             Log::error('Failed to send SuratSubmitted email: ' . $e->getMessage());
         }
 
-        return redirect()->route('surat.status', [
+        // Redirect back with success details for rendering the modal
+        return redirect()->route('surat.form')->with('success_pengajuan', [
             'id' => $pengajuan->id,
-            'token' => $pengajuan->generateToken()
-        ])->with('success', 'Pengajuan surat berhasil dikirim! Silakan periksa email Anda atau simpan nomor pengajuan ini.');
+            'nomor_pengajuan' => $nomor,
+            'nama' => $pengajuan->nama,
+            'email' => $pengajuan->email,
+        ]);
     }
 
     /**
-     * Handle checking status request.
+     * Fetch available schedules dynamically from jadwal table.
      */
-    public function checkStatus(Request $request)
+    public function jadwalTersedia()
     {
-        $request->validate([
-            'nim' => 'required|string',
-            'nomor_pengajuan' => 'required|string',
-        ]);
-
-        $pengajuan = PengajuanSurat::where('nim', $request->nim)
-            ->where('nomor_pengajuan', $request->nomor_pengajuan)
-            ->first();
-
-        if (!$pengajuan) {
-            return back()->withErrors([
-                'error' => 'Data pengajuan tidak ditemukan. Pastikan NIM dan Nomor Pengajuan benar.'
+        $jadwal = Jadwal::with(['matkul', 'kelas', 'ruangan'])
+            ->get()
+            ->map(fn($j) => [
+                'value' => ($j->kelas && $j->ruangan)
+                    ? "{$j->kelas->kelas} — {$j->hari}, {$j->jam_mulai} ({$j->ruangan->nama_ruangan})"
+                    : "Jadwal #{$j->id}",
+                'label' => ($j->matkul && $j->kelas && $j->ruangan)
+                    ? "{$j->matkul->nama_mk} | {$j->kelas->kelas} | {$j->hari} {$j->jam_mulai}–{$j->jam_selesai} | {$j->ruangan->nama_ruangan}"
+                    : "Jadwal #{$j->id}",
             ]);
-        }
 
-        return redirect()->route('surat.status', [
-            'id' => $pengajuan->id,
-            'token' => $pengajuan->generateToken()
-        ]);
-    }
-
-    /**
-     * Display status detail.
-     */
-    public function showStatus($id, $token)
-    {
-        $pengajuan = PengajuanSurat::findOrFail($id);
-
-        if ($token !== $pengajuan->generateToken()) {
-            abort(403, 'Akses ditolak. Token tidak valid.');
-        }
-
-        return inertia('PengajuanSurat/Status', [
-            'pengajuan' => $pengajuan,
-            'downloadUrl' => route('surat.download', ['id' => $pengajuan->id, 'token' => $pengajuan->generateToken()])
-        ]);
+        return response()->json($jadwal);
     }
 
     /**

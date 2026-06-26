@@ -38,4 +38,13 @@ class SuratApproved extends Mailable
             view: 'emails.surat_approved',
         );
     }
+
+    public function attachments(): array
+    {
+        return [
+            \Illuminate\Mail\Mailables\Attachment::fromStorageDisk('local', $this->pengajuan->file_surat)
+                ->as('Surat_Izin_Praktikum_' . $this->pengajuan->nim . '.pdf')
+                ->withMime('application/pdf'),
+        ];
+    }
 }
