@@ -105,6 +105,6 @@ class AdminPengaduanController extends Controller
             abort(404, 'File lampiran tidak ditemukan.');
         }
 
-        return Storage::disk('local')->download($pengaduan->lampiran);
+        return Storage::disk('local')->response($pengaduan->lampiran);
     }
 }

@@ -30,6 +30,10 @@ interface PengajuanProps {
 export default function Show({ surat, buktiUrl, suratUrl }: PengajuanProps) {
     const [action, setAction] = useState<'none' | 'approve' | 'reject'>('none');
 
+    const fileBuktiName = surat.file_bukti || '';
+    const isImage = /\.(jpeg|jpg|png|gif|webp)$/i.test(fileBuktiName);
+    const isPdf = /\.pdf$/i.test(fileBuktiName);
+
     // Form Approve
     const formApprove = useForm({
         file_surat: null as File | null,
@@ -162,13 +166,49 @@ export default function Show({ surat, buktiUrl, suratUrl }: PengajuanProps) {
                                 )}
 
                                 {buktiUrl ? (
-                                    <div className="pt-2">
-                                        <a
-                                            href={buktiUrl}
-                                            className="inline-flex items-center gap-2 text-xs font-bold text-[#203971] hover:underline font-mono"
-                                        >
-                                            <span className="material-symbols-outlined text-sm">attachment</span> UNDUH BERKAS BUKTI MAHASISWA
-                                        </a>
+                                    <div className="pt-2 space-y-3">
+                                        <div className="flex items-center justify-between border-b border-gray-100 pb-2">
+                                            <span className="text-xs text-gray-500 font-mono tracking-wider uppercase font-bold">Berkas Bukti Mahasiswa:</span>
+                                            <a
+                                                href={buktiUrl}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="inline-flex items-center gap-1.5 text-xs font-bold text-[#203971] hover:underline font-mono"
+                                            >
+                                                <span className="material-symbols-outlined text-sm">open_in_new</span> Buka di Tab Baru
+                                            </a>
+                                        </div>
+
+                                        {isImage && (
+                                            <div className="border border-gray-200 rounded-lg overflow-hidden bg-gray-50 p-2">
+                                                <img
+                                                    src={buktiUrl}
+                                                    alt="Bukti Mahasiswa"
+                                                    className="max-w-full h-auto max-h-[500px] rounded mx-auto object-contain"
+                                                />
+                                            </div>
+                                        )}
+
+                                        {isPdf && (
+                                            <div className="border border-gray-200 rounded-lg overflow-hidden bg-gray-50 h-[500px]">
+                                                <iframe
+                                                    src={buktiUrl}
+                                                    className="w-full h-full border-0"
+                                                    title="Bukti Mahasiswa PDF"
+                                                />
+                                            </div>
+                                        )}
+
+                                        {!isImage && !isPdf && (
+                                            <div className="bg-gray-50 border border-gray-100 p-4 rounded text-xs">
+                                                <a
+                                                    href={buktiUrl}
+                                                    className="inline-flex items-center gap-2 font-bold text-[#203971] hover:underline font-mono"
+                                                >
+                                                    <span className="material-symbols-outlined text-sm">download</span> UNDUH BERKAS BUKTI MAHASISWA
+                                                </a>
+                                            </div>
+                                        )}
                                     </div>
                                 ) : (
                                     <p className="text-xs text-gray-400 italic">Tidak ada lampiran berkas bukti pendukung.</p>

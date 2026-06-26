@@ -136,10 +136,7 @@ class PengajuanSuratController extends Controller
             abort(404, 'File surat fisik tidak ditemukan di server.');
         }
 
-        // Return secure download response
-        return Storage::disk('local')->download(
-            $pengajuan->file_surat, 
-            'Surat_Persetujuan_' . $pengajuan->nim . '.pdf'
-        );
+        // Return secure inline view response
+        return Storage::disk('local')->response($pengajuan->file_surat);
     }
 }

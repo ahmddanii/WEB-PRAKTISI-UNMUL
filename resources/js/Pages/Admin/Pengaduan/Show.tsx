@@ -25,6 +25,10 @@ interface PengaduanProps {
 export default function Show({ pengaduan, lampiranUrl }: PengaduanProps) {
     const [isResponding, setIsResponding] = useState(false);
 
+    const fileLampiranName = pengaduan.lampiran || '';
+    const isImage = /\.(jpeg|jpg|png|gif|webp)$/i.test(fileLampiranName);
+    const isPdf = /\.pdf$/i.test(fileLampiranName);
+
     // Form Respons
     const form = useForm({
         respons: pengaduan.respons || '',
@@ -154,13 +158,49 @@ export default function Show({ pengaduan, lampiranUrl }: PengaduanProps) {
                                 </div>
 
                                 {lampiranUrl ? (
-                                    <div className="pt-2">
-                                        <a
-                                            href={lampiranUrl}
-                                            className="inline-flex items-center gap-2 text-xs font-bold text-[#203971] hover:underline font-mono"
-                                        >
-                                            <span className="material-symbols-outlined text-sm">attachment</span> UNDUH FILE LAMPIRAN / BUKTI
-                                        </a>
+                                    <div className="pt-2 space-y-3">
+                                        <div className="flex items-center justify-between border-b border-gray-100 pb-2">
+                                            <span className="text-xs text-gray-500 font-mono tracking-wider uppercase font-bold">File Lampiran / Bukti:</span>
+                                            <a
+                                                href={lampiranUrl}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="inline-flex items-center gap-1.5 text-xs font-bold text-[#203971] hover:underline font-mono"
+                                            >
+                                                <span className="material-symbols-outlined text-sm">open_in_new</span> Buka di Tab Baru
+                                            </a>
+                                        </div>
+
+                                        {isImage && (
+                                            <div className="border border-gray-200 rounded-lg overflow-hidden bg-gray-50 p-2">
+                                                <img
+                                                    src={lampiranUrl}
+                                                    alt="Lampiran Pengaduan"
+                                                    className="max-w-full h-auto max-h-[500px] rounded mx-auto object-contain"
+                                                />
+                                            </div>
+                                        )}
+
+                                        {isPdf && (
+                                            <div className="border border-gray-200 rounded-lg overflow-hidden bg-gray-50 h-[500px]">
+                                                <iframe
+                                                    src={lampiranUrl}
+                                                    className="w-full h-full border-0"
+                                                    title="Lampiran Pengaduan PDF"
+                                                />
+                                            </div>
+                                        )}
+
+                                        {!isImage && !isPdf && (
+                                            <div className="bg-gray-50 border border-gray-100 p-4 rounded text-xs">
+                                                <a
+                                                    href={lampiranUrl}
+                                                    className="inline-flex items-center gap-2 font-bold text-[#203971] hover:underline font-mono"
+                                                >
+                                                    <span className="material-symbols-outlined text-sm">download</span> UNDUH FILE LAMPIRAN / BUKTI
+                                                </a>
+                                            </div>
+                                        )}
                                     </div>
                                 ) : (
                                     <p className="text-xs text-gray-400 italic">Tidak ada file lampiran yang diunggah.</p>

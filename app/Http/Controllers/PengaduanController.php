@@ -123,9 +123,7 @@ class PengaduanController extends Controller
             abort(404, 'File lampiran tidak ditemukan di server.');
         }
 
-        return Storage::disk('local')->download(
-            $pengaduan->lampiran, 
-            'Lampiran_Pengaduan_' . $pengaduan->nim . '_' . basename($pengaduan->lampiran)
-        );
+        // Return secure inline view response
+        return Storage::disk('local')->response($pengaduan->lampiran);
     }
 }

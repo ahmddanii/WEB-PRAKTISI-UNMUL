@@ -140,7 +140,7 @@ class AdminPengajuanSuratController extends Controller
             abort(404, 'File bukti tidak ditemukan.');
         }
 
-        return Storage::disk('local')->download($surat->file_bukti);
+        return Storage::disk('local')->response($surat->file_bukti);
     }
 
     /**
@@ -154,6 +154,6 @@ class AdminPengajuanSuratController extends Controller
             abort(404, 'File surat tidak ditemukan.');
         }
 
-        return Storage::disk('local')->download($surat->file_surat);
+        return Storage::disk('local')->response($surat->file_surat);
     }
 }
