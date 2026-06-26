@@ -24,7 +24,7 @@ class PengaduanController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'kategori' => 'required|in:keluhan,saran,pertanyaan,lainnya',
+            'kategori' => 'required|in:pengaduan,aspirasi',
             'angkatan' => 'required|integer|min:2000|max:' . (now()->year + 1),
             'mata_kuliah_id' => 'nullable|exists:mata_kuliah,id',
             'isi_pengaduan' => 'required|string|max:2000',
@@ -61,10 +61,11 @@ class PengaduanController extends Controller
         $angkatan = (int) $request->angkatan;
         $tahunSekarang = now()->year;
         
-        // Logika mapping:
-        // Angkatan 2024 -> Semester 1 & 2
-        // Angkatan 2023 -> Semester 3 & 4
-        // ...
+        // Jika bulan saat ini sebelum Agustus (bulan 1-7), maka kita masih di tahun ajaran sebelumnya
+        if (now()->month < 8) {
+            $tahunSekarang -= 1;
+        }
+
         $semesterMulai = ($tahunSekarang - $angkatan) * 2 + 1;
         $semesterAkhir = $semesterMulai + 1;
 
