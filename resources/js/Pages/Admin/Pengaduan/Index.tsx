@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Head, Link, router } from '@inertiajs/react';
 import AdminLayout from '../../../Layouts/AdminLayout';
 import Pagination from '../../../Components/Pagination';
@@ -27,44 +27,64 @@ interface IndexProps {
         last_page: number;
         total: number;
     };
+    mataKuliahs: {
+        id: number;
+        nama_mk: string;
+    }[];
     filters: {
         search?: string;
         status?: string;
         kategori?: string;
         angkatan?: string;
+        mata_kuliah_id?: string;
     };
 }
 
-export default function Index({ pengaduans, filters }: IndexProps) {
+export default function Index({ pengaduans, mataKuliahs, filters }: IndexProps) {
     const [search, setSearch] = useState(filters.search || '');
     const [status, setStatus] = useState(filters.status || '');
     const [kategori, setKategori] = useState(filters.kategori || '');
     const [angkatan, setAngkatan] = useState(filters.angkatan || '');
+    const [mataKuliahId, setMataKuliahId] = useState(filters.mata_kuliah_id || '');
 
     const currentYear = new Date().getFullYear();
     const angkatanList = Array.from({ length: 5 }, (_, i) => currentYear - i);
 
+    useEffect(() => {
+        setSearch(filters.search || '');
+        setStatus(filters.status || '');
+        setKategori(filters.kategori || '');
+        setAngkatan(filters.angkatan || '');
+        setMataKuliahId(filters.mata_kuliah_id || '');
+    }, [filters]);
+
     const handleSearchSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        applyFilters({ search, status, kategori, angkatan });
+        applyFilters({ search, status, kategori, angkatan, mata_kuliah_id: mataKuliahId });
     };
 
     const handleStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const val = e.target.value;
         setStatus(val);
-        applyFilters({ search, status: val, kategori, angkatan });
+        applyFilters({ search, status: val, kategori, angkatan, mata_kuliah_id: mataKuliahId });
     };
 
     const handleKategoriChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const val = e.target.value;
         setKategori(val);
-        applyFilters({ search, status, kategori: val, angkatan });
+        applyFilters({ search, status, kategori: val, angkatan, mata_kuliah_id: mataKuliahId });
     };
 
     const handleAngkatanChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const val = e.target.value;
         setAngkatan(val);
-        applyFilters({ search, status, kategori, angkatan: val });
+        applyFilters({ search, status, kategori, angkatan: val, mata_kuliah_id: mataKuliahId });
+    };
+
+    const handleMataKuliahChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const val = e.target.value;
+        setMataKuliahId(val);
+        applyFilters({ search, status, kategori, angkatan, mata_kuliah_id: val });
     };
 
     const applyFilters = (newFilters: any) => {
@@ -101,6 +121,7 @@ export default function Index({ pengaduans, filters }: IndexProps) {
         if (status) params.append('status', status);
         if (kategori) params.append('kategori', kategori);
         if (angkatan) params.append('angkatan', angkatan);
+        if (mataKuliahId) params.append('mata_kuliah_id', mataKuliahId);
         return `/admin/pengaduan/presentasi?${params.toString()}`;
     };
 
@@ -179,6 +200,22 @@ export default function Index({ pengaduans, filters }: IndexProps) {
                                 {angkatanList.map((yr) => (
                                     <option key={yr} value={yr}>
                                         Angkatan {yr}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+
+                        {/* Filter Mata Kuliah */}
+                        <div>
+                            <select
+                                value={mataKuliahId}
+                                onChange={handleMataKuliahChange}
+                                className="bg-white border border-gray-300 rounded p-2 text-xs focus:ring-2 focus:ring-[#203971] outline-none cursor-pointer max-w-[200px]"
+                            >
+                                <option value="">Semua Mata Kuliah</option>
+                                {mataKuliahs.map((mk) => (
+                                    <option key={mk.id} value={mk.id}>
+                                        {mk.nama_mk}
                                     </option>
                                 ))}
                             </select>
