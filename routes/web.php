@@ -50,9 +50,8 @@ Route::get('/tentang', function () {
 // Route untuk Pengajuan Surat Digital
 Route::get('/pengajuan-surat', [PengajuanSuratController::class, 'index'])->name('surat.form');
 Route::post('/pengajuan-surat', [PengajuanSuratController::class, 'store'])->name('surat.store');
-Route::post('/pengajuan-surat/cek-status', [PengajuanSuratController::class, 'checkStatus'])->name('surat.check_status');
-Route::get('/pengajuan-surat/status/{id}/{token}', [PengajuanSuratController::class, 'showStatus'])->name('surat.status');
 Route::get('/pengajuan-surat/download/{id}/{token}', [PengajuanSuratController::class, 'downloadSurat'])->name('surat.download');
+Route::get('/api/jadwal-tersedia', [PengajuanSuratController::class, 'jadwalTersedia'])->name('api.jadwal-tersedia');
 
 // Route untuk Form Pengaduan & Aspirasi
 Route::get('/pengaduan', [PengaduanController::class, 'index'])->name('pengaduan.index');
