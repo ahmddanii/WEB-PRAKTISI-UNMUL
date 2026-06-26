@@ -6,7 +6,7 @@ import Pagination from '../../../Components/Pagination';
 interface PengaduanItem {
     id: number;
     nomor_tiket: string;
-    kategori: 'keluhan' | 'saran' | 'pertanyaan' | 'lainnya';
+    kategori: 'pengaduan' | 'aspirasi';
     kategori_label: string;
     angkatan: number;
     mata_kuliah?: {
@@ -85,12 +85,10 @@ export default function Index({ pengaduans, filters }: IndexProps) {
 
     const getKategoriStyle = (kategori: string) => {
         switch (kategori) {
-            case 'keluhan':
+            case 'pengaduan':
                 return 'bg-rose-50 text-rose-700 border border-rose-100';
-            case 'saran':
+            case 'aspirasi':
                 return 'bg-teal-50 text-teal-700 border border-teal-100';
-            case 'pertanyaan':
-                return 'bg-indigo-50 text-indigo-700 border border-indigo-100';
             default:
                 return 'bg-gray-50 text-gray-700 border border-gray-100';
         }
@@ -165,10 +163,8 @@ export default function Index({ pengaduans, filters }: IndexProps) {
                                 className="bg-white border border-gray-300 rounded p-2 text-xs focus:ring-2 focus:ring-[#203971] outline-none cursor-pointer"
                             >
                                 <option value="">Semua Kategori</option>
-                                <option value="keluhan">Keluhan</option>
-                                <option value="saran">Saran</option>
-                                <option value="pertanyaan">Pertanyaan</option>
-                                <option value="lainnya">Lainnya</option>
+                                <option value="pengaduan">Pengaduan</option>
+                                <option value="aspirasi">Aspirasi</option>
                             </select>
                         </div>
 
