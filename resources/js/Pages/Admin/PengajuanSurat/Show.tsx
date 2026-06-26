@@ -36,7 +36,6 @@ export default function Show({ surat, buktiUrl, suratUrl }: PengajuanProps) {
 
     // Form Approve
     const formApprove = useForm({
-        file_surat: null as File | null,
         catatan: '',
     });
 
@@ -48,7 +47,6 @@ export default function Show({ surat, buktiUrl, suratUrl }: PengajuanProps) {
     const handleApproveSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         formApprove.post(`/admin/pengajuan-surat/${surat.id}/approve`, {
-            forceFormData: true,
             onSuccess: () => setAction('none'),
         });
     };
@@ -237,7 +235,7 @@ export default function Show({ surat, buktiUrl, suratUrl }: PengajuanProps) {
                                             onClick={() => setAction('approve')}
                                             className="w-full bg-emerald-500 hover:bg-emerald-600 text-white py-2.5 rounded font-bold font-mono tracking-wider text-xs cursor-pointer transition-colors shadow-sm"
                                         >
-                                            SETUJUI PENGAJUAN
+                                            SETUJUI & GENERATE SURAT
                                         </button>
                                         <button
                                             onClick={() => setAction('reject')}
@@ -260,7 +258,7 @@ export default function Show({ surat, buktiUrl, suratUrl }: PengajuanProps) {
                                                     href={suratUrl}
                                                     className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-700 hover:underline font-mono"
                                                 >
-                                                    <span className="material-symbols-outlined text-sm">download</span> Unduh PDF Terupload
+                                                    <span className="material-symbols-outlined text-sm">download</span> Unduh PDF Surat Izin
                                                 </a>
                                             </div>
                                         )}
@@ -279,25 +277,8 @@ export default function Show({ surat, buktiUrl, suratUrl }: PengajuanProps) {
                         {/* Approve Form Panel */}
                         {action === 'approve' && (
                             <div className="bg-white border border-emerald-200 rounded-lg p-5 shadow-sm space-y-4">
-                                <h4 className="font-bold text-xs text-emerald-800 font-mono tracking-wider uppercase">UPLOAD SURAT PERSETUJUAN</h4>
+                                <h4 className="font-bold text-xs text-emerald-800 font-mono tracking-wider uppercase">SETUJUI & GENERATE SURAT</h4>
                                 <form onSubmit={handleApproveSubmit} className="space-y-4">
-                                    <div>
-                                        <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">File Surat Resmi (PDF)</label>
-                                        <input
-                                            type="file"
-                                            accept=".pdf"
-                                            required
-                                            onChange={(e) => {
-                                                if (e.target.files && e.target.files.length > 0) {
-                                                    formApprove.setData('file_surat', e.target.files[0]);
-                                                }
-                                            }}
-                                            className="w-full text-xs text-gray-500 file:mr-2 file:py-1.5 file:px-3 file:rounded file:border-0 file:text-[10px] file:font-bold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100 cursor-pointer"
-                                        />
-                                        {formApprove.errors.file_surat && (
-                                            <span className="text-red-500 text-[10px] mt-1 block">{formApprove.errors.file_surat}</span>
-                                        )}
-                                    </div>
                                     <div>
                                         <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">Catatan Tambahan (Opsional)</label>
                                         <textarea
@@ -316,7 +297,7 @@ export default function Show({ surat, buktiUrl, suratUrl }: PengajuanProps) {
                                             disabled={formApprove.processing}
                                             className="flex-1 bg-emerald-500 hover:bg-emerald-600 text-white py-2 rounded font-bold font-mono text-[11px] tracking-wider transition-colors shadow-sm cursor-pointer"
                                         >
-                                            SETUJUI
+                                            SETUJUI & GENERATE
                                         </button>
                                         <button
                                             type="button"
