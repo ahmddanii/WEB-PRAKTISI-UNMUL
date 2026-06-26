@@ -4,7 +4,7 @@ import { Head, router } from '@inertiajs/react';
 interface PengaduanItem {
     id: number;
     nomor_tiket: string;
-    kategori: 'keluhan' | 'saran' | 'pertanyaan' | 'lainnya';
+    kategori: 'pengaduan' | 'aspirasi';
     kategori_label: string;
     angkatan: number;
     mata_kuliah?: {
@@ -155,12 +155,10 @@ export default function Presentasi({ filters }: PresentasiProps) {
 
     const getKategoriColor = (kategori: string) => {
         switch (kategori) {
-            case 'keluhan':
+            case 'pengaduan':
                 return 'bg-red-500/20 text-red-400 border border-red-500/30';
-            case 'saran':
+            case 'aspirasi':
                 return 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30';
-            case 'pertanyaan':
-                return 'bg-indigo-500/20 text-indigo-400 border border-indigo-500/30';
             default:
                 return 'bg-slate-500/20 text-slate-400 border border-slate-500/30';
         }
