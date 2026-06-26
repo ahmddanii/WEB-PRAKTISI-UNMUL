@@ -3,9 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Pengaduan;
-use App\Mail\PengaduanSubmitted;
+use App\Models\MataKuliah;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
 
@@ -25,105 +24,54 @@ class PengaduanController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'kategori' => 'required|in:Keluhan,Saran,Pertanyaan,Lainnya',
-            'nama' => 'required|string|max:100',
-            'nim' => 'required|string|max:20',
-            'email' => 'required|email|max:100',
-            'no_hp' => 'nullable|string|max:20',
-            'matkul_terkait' => 'nullable|string|max:150',
-            'judul' => 'required|string|max:200',
-            'isi' => 'required|string|max:2000',
+            'kategori' => 'required|in:keluhan,saran,pertanyaan,lainnya',
+            'angkatan' => 'required|integer|min:2000|max:' . (now()->year + 1),
+            'mata_kuliah_id' => 'nullable|exists:mata_kuliah,id',
+            'isi_pengaduan' => 'required|string|max:2000',
             'lampiran' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:3072',
+            'nama_pelapor' => 'nullable|string|max:100',
+            'nim_pelapor' => 'nullable|string|max:20',
         ]);
 
-        $data = $request->except(['lampiran']);
+        $data = [
+            'kategori' => $request->kategori,
+            'angkatan' => $request->angkatan,
+            'mata_kuliah_id' => $request->mata_kuliah_id ?: null,
+            'isi_pengaduan' => $request->isi_pengaduan,
+            'nama_pelapor' => $request->nama_pelapor ?: null,
+            'nim_pelapor' => $request->nim_pelapor ?: null,
+            'status' => 'baru',
+        ];
 
         if ($request->hasFile('lampiran')) {
             // Stored in secure storage/app/private/lampiran
-            $data['lampiran'] = $request->file('lampiran')->store('lampiran', 'local');
+            $data['file_lampiran'] = $request->file('lampiran')->store('lampiran', 'local');
         }
 
-        // Create pengaduan first to get ID
         $pengaduan = Pengaduan::create($data);
 
-        // Update with nomor_tiket
-        $tiket = '#T' . str_pad($pengaduan->id, 5, '0', STR_PAD_LEFT);
-        $pengaduan->update([
-            'nomor_tiket' => $tiket,
-        ]);
-
-        // Send email confirmation
-        try {
-            Mail::to($pengaduan->email)->send(new PengaduanSubmitted($pengaduan));
-        } catch (\Exception $e) {
-            Log::error('Failed to send PengaduanSubmitted email: ' . $e->getMessage());
-        }
-
-        return redirect()->route('pengaduan.status', [
-            'id' => $pengaduan->id,
-            'token' => $pengaduan->generateToken()
-        ])->with('success', 'Pengaduan berhasil dikirim! Silakan periksa email Anda atau simpan Nomor Tiket ini.');
+        return redirect()->route('pengaduan.index')->with('success_ticket', $pengaduan->nomor_tiket);
     }
 
     /**
-     * Handle checking status request.
+     * Fetch courses dynamically based on batch (angkatan).
      */
-    public function checkStatus(Request $request)
+    public function matkulByAngkatan(Request $request)
     {
-        $request->validate([
-            'nim' => 'required|string',
-            'nomor_tiket' => 'required|string',
-        ]);
+        $angkatan = (int) $request->angkatan;
+        $tahunSekarang = now()->year;
+        
+        // Logika mapping:
+        // Angkatan 2024 -> Semester 1 & 2
+        // Angkatan 2023 -> Semester 3 & 4
+        // ...
+        $semesterMulai = ($tahunSekarang - $angkatan) * 2 + 1;
+        $semesterAkhir = $semesterMulai + 1;
 
-        $pengaduan = Pengaduan::where('nim', $request->nim)
-            ->where('nomor_tiket', $request->nomor_tiket)
-            ->first();
+        $matkul = MataKuliah::whereBetween('semester', [$semesterMulai, $semesterAkhir])
+            ->orderBy('nama_mk')
+            ->get(['id', 'nama_mk']);
 
-        if (!$pengaduan) {
-            return back()->withErrors([
-                'error' => 'Data pengaduan tidak ditemukan. Pastikan NIM dan Nomor Tiket benar.'
-            ]);
-        }
-
-        return redirect()->route('pengaduan.status', [
-            'id' => $pengaduan->id,
-            'token' => $pengaduan->generateToken()
-        ]);
-    }
-
-    /**
-     * Display status detail of the complaint.
-     */
-    public function showStatus($id, $token)
-    {
-        $pengaduan = Pengaduan::findOrFail($id);
-
-        if ($token !== $pengaduan->generateToken()) {
-            abort(403, 'Akses ditolak. Token tidak valid.');
-        }
-
-        return inertia('Pengaduan/Status', [
-            'pengaduan' => $pengaduan,
-            'downloadUrl' => $pengaduan->lampiran ? route('pengaduan.download', ['id' => $pengaduan->id, 'token' => $pengaduan->generateToken()]) : null
-        ]);
-    }
-
-    /**
-     * Stream/download the uploaded lampiran file securely.
-     */
-    public function downloadLampiran($id, $token)
-    {
-        $pengaduan = Pengaduan::findOrFail($id);
-
-        if ($token !== $pengaduan->generateToken()) {
-            abort(403, 'Akses ditolak. Token tidak valid.');
-        }
-
-        if (!$pengaduan->lampiran || !Storage::disk('local')->exists($pengaduan->lampiran)) {
-            abort(404, 'File lampiran tidak ditemukan di server.');
-        }
-
-        // Return secure inline view response
-        return Storage::disk('local')->response($pengaduan->lampiran);
+        return response()->json($matkul);
     }
 }
