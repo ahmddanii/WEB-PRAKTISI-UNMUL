@@ -159,10 +159,12 @@ export default function Index({ pengurusInti, koordinatorMatkul, matkuls }: Inde
 
   const handleCropSave = () => {
     if (!cropperRef.current) return;
-    cropperRef.current.getCroppedCanvas({
+    const croppedCanvas = cropperRef.current.getCroppedCanvas({
       width: 600,
       height: 800,
-    }).toBlob((blob: Blob | null) => {
+    });
+    
+    croppedCanvas.toBlob((blob: Blob | null) => {
       if (blob && currentFileInputRef.current) {
         const fileName = `cropped_${new Date().getTime()}.jpg`;
         const file = new File([blob], fileName, {

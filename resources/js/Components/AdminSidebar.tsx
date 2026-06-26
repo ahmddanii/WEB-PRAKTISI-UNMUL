@@ -7,7 +7,10 @@ interface AdminSidebarProps {
 }
 
 export default function AdminSidebar({ isOpen, onClose }: AdminSidebarProps) {
-  const { url } = usePage();
+  const { url, props } = usePage();
+  const auth = props.auth as any;
+  const pendingSuratCount = auth?.pending_surat_count || 0;
+  const newPengaduanCount = auth?.new_pengaduan_count || 0;
 
   const handleLogout = (e: React.FormEvent) => {
     e.preventDefault();
@@ -94,6 +97,44 @@ export default function AdminSidebar({ isOpen, onClose }: AdminSidebarProps) {
           >
             <span className="material-symbols-outlined">group</span>
             <span className="text-[16px]">Pengurus & Koor</span>
+          </Link>
+          <Link 
+            className={`flex items-center justify-between px-4 py-3 rounded-lg transition-colors ${
+              isActive('/admin/pengajuan-surat') 
+                ? 'bg-white text-[#203971] font-bold shadow-sm' 
+                : 'text-white/70 hover:text-white hover:bg-white/10'
+            }`} 
+            href="/admin/pengajuan-surat"
+            onClick={onClose}
+          >
+            <div className="flex items-center gap-3">
+              <span className="material-symbols-outlined">description</span>
+              <span className="text-[16px]">Pengajuan Surat</span>
+            </div>
+            {pendingSuratCount > 0 && (
+              <span className="px-2 py-0.5 text-xs font-bold text-white bg-red-500 rounded-full">
+                {pendingSuratCount}
+              </span>
+            )}
+          </Link>
+          <Link 
+            className={`flex items-center justify-between px-4 py-3 rounded-lg transition-colors ${
+              isActive('/admin/pengaduan') 
+                ? 'bg-white text-[#203971] font-bold shadow-sm' 
+                : 'text-white/70 hover:text-white hover:bg-white/10'
+            }`} 
+            href="/admin/pengaduan"
+            onClick={onClose}
+          >
+            <div className="flex items-center gap-3">
+              <span className="material-symbols-outlined">forum</span>
+              <span className="text-[16px]">Pengaduan</span>
+            </div>
+            {newPengaduanCount > 0 && (
+              <span className="px-2 py-0.5 text-xs font-bold text-white bg-red-500 rounded-full">
+                {newPengaduanCount}
+              </span>
+            )}
           </Link>
         </nav>
 

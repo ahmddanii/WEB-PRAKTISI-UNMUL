@@ -44,6 +44,8 @@ class HandleInertiaRequests extends Middleware
                     'username' => $request->user()->username,
                     'email' => $request->user()->email,
                 ] : null,
+                'pending_surat_count' => $request->user() ? \App\Models\PengajuanSurat::where('status', 'Menunggu')->count() : 0,
+                'new_pengaduan_count' => $request->user() ? \App\Models\Pengaduan::where('status', 'Baru')->count() : 0,
             ],
             'flash' => [
                 'success' => $request->session()->get('success'),

@@ -31,6 +31,8 @@ export default function Navbar() {
           <Link className="text-on-surface-variant hover:text-primary transition-colors text-base font-medium" href="/dokumen">Dokumen</Link>
           <Link className="text-on-surface-variant hover:text-primary transition-colors text-base font-medium" href="/jadwal">Jadwal</Link>
           <Link className="text-on-surface-variant hover:text-primary transition-colors text-base font-medium" href="/berita">Berita</Link>
+          <Link className="text-on-surface-variant hover:text-primary transition-colors text-base font-medium" href="/pengajuan-surat">Pengajuan Surat</Link>
+          <Link className="text-on-surface-variant hover:text-primary transition-colors text-base font-medium" href="/pengaduan">Pengaduan</Link>
           <Link className="text-on-surface-variant hover:text-primary transition-colors text-base font-medium" href="/kontak">Kontak</Link>
           <Link className="text-on-surface-variant hover:text-primary transition-colors text-base font-medium" href="/tentang">Tentang</Link>
         </div>
@@ -50,6 +52,8 @@ export default function Navbar() {
           <Link onClick={() => setIsOpen(false)} className="text-on-surface-variant hover:text-primary transition-colors text-base font-medium" href="/dokumen">Dokumen</Link>
           <Link onClick={() => setIsOpen(false)} className="text-on-surface-variant hover:text-primary transition-colors text-base font-medium" href="/jadwal">Jadwal</Link>
           <Link onClick={() => setIsOpen(false)} className="text-on-surface-variant hover:text-primary transition-colors text-base font-medium" href="/berita">Berita</Link>
+          <Link onClick={() => setIsOpen(false)} className="text-on-surface-variant hover:text-primary transition-colors text-base font-medium" href="/pengajuan-surat">Pengajuan Surat</Link>
+          <Link onClick={() => setIsOpen(false)} className="text-on-surface-variant hover:text-primary transition-colors text-base font-medium" href="/pengaduan">Pengaduan</Link>
           <Link onClick={() => setIsOpen(false)} className="text-on-surface-variant hover:text-primary transition-colors text-base font-medium" href="/kontak">Kontak</Link>
           <Link onClick={() => setIsOpen(false)} className="text-on-surface-variant hover:text-primary transition-colors text-base font-medium" href="/tentang">Tentang</Link>
         </div>

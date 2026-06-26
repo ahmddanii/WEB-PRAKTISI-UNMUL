@@ -7,6 +7,9 @@ use App\Models\KoordinatorMatkul;
 use App\Models\MataKuliah;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class PengurusController extends Controller
 {
@@ -35,7 +38,7 @@ class PengurusController extends Controller
         $data['urutan'] = $urutanTerakhir + 1;
 
         if ($request->hasFile('foto')) {
-            $data['foto'] = $request->file('foto')->store('pengurus', 'public');
+            $data['foto'] = $this->handleImageUpload($request->file('foto'), 'pengurus');
         }
 
         PengurusInti::create($data);
@@ -60,7 +63,7 @@ class PengurusController extends Controller
             if ($pengurus->foto) {
                 Storage::disk('public')->delete($pengurus->foto);
             }
-            $data['foto'] = $request->file('foto')->store('pengurus', 'public');
+            $data['foto'] = $this->handleImageUpload($request->file('foto'), 'pengurus');
         }
 
         $pengurus->update($data);
@@ -119,7 +122,7 @@ class PengurusController extends Controller
         $data = $request->all();
 
         if ($request->hasFile('foto')) {
-            $data['foto'] = $request->file('foto')->store('koordinator', 'public');
+            $data['foto'] = $this->handleImageUpload($request->file('foto'), 'koordinator');
         }
 
         KoordinatorMatkul::create($data);
@@ -144,7 +147,7 @@ class PengurusController extends Controller
             if ($koor->foto) {
                 Storage::disk('public')->delete($koor->foto);
             }
-            $data['foto'] = $request->file('foto')->store('koordinator', 'public');
+            $data['foto'] = $this->handleImageUpload($request->file('foto'), 'koordinator');
         }
 
         $koor->update($data);
@@ -159,5 +162,37 @@ class PengurusController extends Controller
         }
         $koor->delete();
         return redirect()->back()->with('success', 'Koordinator berhasil dihapus!');
+    }
+
+    private function handleImageUpload($file, $folder)
+    {
+        $apiKey = env('REMOVE_BG_API_KEY');
+
+        if ($apiKey) {
+            try {
+                $response = Http::withHeaders([
+                    'X-Api-Key' => $apiKey,
+                ])->attach(
+                    'image_file',
+                    file_get_contents($file->getRealPath()),
+                    $file->getClientOriginalName()
+                )->post('https://api.remove.bg/v1.0/removebg', [
+                    'size' => 'auto',
+                ]);
+
+                if ($response->successful()) {
+                    $filename = $folder . '/' . Str::random(40) . '.png';
+                    Storage::disk('public')->put($filename, $response->body());
+                    return $filename;
+                } else {
+                    Log::warning('Remove.bg API failed: ' . $response->body());
+                }
+            } catch (\Exception $e) {
+                Log::error('Error calling Remove.bg API: ' . $e->getMessage());
+            }
+        }
+
+        // Fallback to storing local original file if API fails or key is missing
+        return $file->store($folder, 'public');
     }
 }

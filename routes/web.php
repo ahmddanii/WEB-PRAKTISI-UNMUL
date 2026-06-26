@@ -6,6 +6,10 @@ use App\Http\Controllers\BeritaController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\JadwalController;
 use App\Http\Controllers\PengurusController;
+use App\Http\Controllers\PengajuanSuratController;
+use App\Http\Controllers\PengaduanController;
+use App\Http\Controllers\Admin\AdminPengajuanSuratController;
+use App\Http\Controllers\Admin\AdminPengaduanController;
 use App\Models\Berita;
 
 // 1. ROUTE BERANDA PUBLIK
@@ -42,6 +46,20 @@ Route::get('/tentang', function () {
     
     return inertia('Tentang', compact('pengurusInti', 'koordinatorMatkul'));
 })->name('tentang');
+
+// Route untuk Pengajuan Surat Digital
+Route::get('/pengajuan-surat', [PengajuanSuratController::class, 'index'])->name('surat.form');
+Route::post('/pengajuan-surat', [PengajuanSuratController::class, 'store'])->name('surat.store');
+Route::post('/pengajuan-surat/cek-status', [PengajuanSuratController::class, 'checkStatus'])->name('surat.check_status');
+Route::get('/pengajuan-surat/status/{id}/{token}', [PengajuanSuratController::class, 'showStatus'])->name('surat.status');
+Route::get('/pengajuan-surat/download/{id}/{token}', [PengajuanSuratController::class, 'downloadSurat'])->name('surat.download');
+
+// Route untuk Form Pengaduan & Aspirasi
+Route::get('/pengaduan', [PengaduanController::class, 'index'])->name('pengaduan.form');
+Route::post('/pengaduan', [PengaduanController::class, 'store'])->name('pengaduan.store');
+Route::post('/pengaduan/cek-status', [PengaduanController::class, 'checkStatus'])->name('pengaduan.check_status');
+Route::get('/pengaduan/status/{id}/{token}', [PengaduanController::class, 'showStatus'])->name('pengaduan.status');
+Route::get('/pengaduan/download/{id}/{token}', [PengaduanController::class, 'downloadLampiran'])->name('pengaduan.download');
 // 2. ROUTE GUEST
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
@@ -87,4 +105,18 @@ Route::middleware('auth')->group(function () {
     Route::get('/admin/jadwal/kelas', [JadwalController::class, 'kelasIndex'])->name('jadwal.kelas');
     Route::post('/admin/jadwal/kelas', [JadwalController::class, 'kelasStore'])->name('jadwal.kelas.store');
     Route::delete('/admin/jadwal/kelas/{id}', [JadwalController::class, 'kelasDestroy'])->name('jadwal.kelas.destroy');
+
+    // Admin Pengajuan Surat
+    Route::get('/admin/pengajuan-surat', [AdminPengajuanSuratController::class, 'index'])->name('admin.surat.index');
+    Route::get('/admin/pengajuan-surat/{id}', [AdminPengajuanSuratController::class, 'show'])->name('admin.surat.show');
+    Route::post('/admin/pengajuan-surat/{id}/approve', [AdminPengajuanSuratController::class, 'approve'])->name('admin.surat.approve');
+    Route::post('/admin/pengajuan-surat/{id}/reject', [AdminPengajuanSuratController::class, 'reject'])->name('admin.surat.reject');
+    Route::get('/admin/pengajuan-surat/{id}/bukti', [AdminPengajuanSuratController::class, 'downloadBukti'])->name('admin.surat.bukti');
+    Route::get('/admin/pengajuan-surat/{id}/file', [AdminPengajuanSuratController::class, 'downloadSurat'])->name('admin.surat.file');
+
+    // Admin Pengaduan
+    Route::get('/admin/pengaduan', [AdminPengaduanController::class, 'index'])->name('admin.pengaduan.index');
+    Route::get('/admin/pengaduan/{id}', [AdminPengaduanController::class, 'show'])->name('admin.pengaduan.show');
+    Route::post('/admin/pengaduan/{id}/respond', [AdminPengaduanController::class, 'respond'])->name('admin.pengaduan.respond');
+    Route::get('/admin/pengaduan/{id}/lampiran', [AdminPengaduanController::class, 'downloadLampiran'])->name('admin.pengaduan.lampiran');
 });
