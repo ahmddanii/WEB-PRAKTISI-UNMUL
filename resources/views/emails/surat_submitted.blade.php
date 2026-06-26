@@ -50,18 +50,15 @@
                     <td class="label">Tanggal Praktikum</td>
                     <td class="value">{{ $pengajuan->tanggal_praktikum->format('d-m-Y') }}</td>
                 </tr>
-                @if($pengajuan->jenis_surat === 'Pindah Sesi')
+                @if($pengajuan->sesi_tujuan)
                 <tr>
-                    <td class="label">Pindah Sesi</td>
-                    <td class="value">Dari {{ $pengajuan->sesi_asal }} ke {{ $pengajuan->sesi_tujuan }}</td>
+                    <td class="label">Pindah Sesi (Sesi Tujuan)</td>
+                    <td class="value">Ke {{ $pengajuan->sesi_tujuan }}</td>
                 </tr>
                 @endif
             </table>
 
-            <p>Anda dapat memantau status pengajuan surat ini secara berkala dengan menekan tombol di bawah ini:</p>
-            <div style="text-align: center;">
-                <a href="{{ url('/pengajuan-surat/cek-status') }}" class="btn">Cek Status Pengajuan</a>
-            </div>
+            <p>Pengajuan Anda saat ini sedang menunggu tinjauan dari Admin. Hasil keputusan (Disetujui/Ditolak) akan otomatis kami kirimkan ke email ini.</p>
         </div>
         <div class="footer">
             &copy; {{ date('Y') }} PRAKTISI - Program Studi Sistem Informasi FT Universitas Mulawarman.
