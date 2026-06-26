@@ -35,16 +35,20 @@ class AdminPengajuanSuratController extends Controller
             $query->where('status', $request->status);
         }
 
-        // Jenis Surat filter
-        if ($request->filled('jenis_surat')) {
-            $query->where('jenis_surat', $request->jenis_surat);
+        // Pindah Sesi filter (berdasarkan keberadaan sesi_tujuan)
+        if ($request->filled('pindah_sesi')) {
+            if ($request->pindah_sesi === 'ya') {
+                $query->whereNotNull('sesi_tujuan');
+            } elseif ($request->pindah_sesi === 'tidak') {
+                $query->whereNull('sesi_tujuan');
+            }
         }
 
         $surats = $query->orderBy('created_at', 'desc')->paginate(10)->withQueryString();
 
         return inertia('Admin/PengajuanSurat/Index', [
             'surats' => $surats,
-            'filters' => $request->only(['search', 'status', 'jenis_surat'])
+            'filters' => $request->only(['search', 'status', 'pindah_sesi'])
         ]);
     }
 
@@ -63,7 +67,7 @@ class AdminPengajuanSuratController extends Controller
     }
 
     /**
-     * Approve the submission and upload the physical PDF.
+     * Approve the submission and auto-generate the signed PDF letter.
      */
     public function approve(Request $request, $id)
     {
@@ -74,17 +78,53 @@ class AdminPengajuanSuratController extends Controller
         }
 
         $request->validate([
-            'file_surat' => 'required|file|mimes:pdf|max:4096',
             'catatan' => 'nullable|string|max:1000',
         ]);
 
-        // Save PDF physically in secure disk local
-        $path = $request->file('file_surat')->store('surat', 'local');
+        // Signature signer: Ahmad Dani (or Head of Lab)
+        $penandatangan = \App\Models\PengurusInti::where('nama', 'Ahmad Dani')->first()
+            ?? \App\Models\PengurusInti::where('jabatan', 'like', '%Head%')->first()
+            ?? \App\Models\PengurusInti::orderBy('urutan')->first();
 
+        if (!$penandatangan) {
+            return back()->with('error', 'Data penandatangan Ketua PI tidak ditemukan di database. Pastikan data pengurus terisi.');
+        }
+
+        // Generate Nomor Surat Otomatis
+        $bulanRomawi = ['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII'];
+        $count = PengajuanSurat::where('status', 'Disetujui')
+            ->whereYear('diproses_at', now()->year)
+            ->count();
+        $urutan = str_pad($count + 1, 3, '0', STR_PAD_LEFT);
+        $nomorSurat = "{$urutan}/PRAKTISI-SI/{$bulanRomawi[now()->month - 1]}/" . now()->year;
+
+        // Generate secure verification token & QR
+        $token = hash('sha256', $surat->id . $surat->nim . config('app.key'));
+        $qrData = "PRAKTISI/SURAT/{$nomorSurat}/{$token}";
+        
+        $qrCode = base64_encode(
+            \SimpleSoftwareIO\QrCode\Facades\QrCode::format('svg')->size(90)->generate($qrData)
+        );
+
+        // Generate PDF
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('surat.izin-praktikum', [
+            'pengajuan' => $surat,
+            'penandatangan' => $penandatangan,
+            'nomorSurat' => $nomorSurat,
+            'qrCode' => $qrCode,
+        ]);
+
+        $fileName = 'surat/Surat_Izin_Praktikum_' . $surat->nim . '_' . time() . '.pdf';
+        Storage::disk('local')->put($fileName, $pdf->output());
+
+        // Update database
         $surat->update([
             'status' => 'Disetujui',
-            'file_surat' => $path,
+            'file_surat' => $fileName,
             'catatan' => $request->catatan,
+            'token' => $token,
+            'diproses_oleh' => auth()->id(),
+            'diproses_at' => now(),
         ]);
 
         // Send Email Approved
@@ -94,8 +134,16 @@ class AdminPengajuanSuratController extends Controller
             Log::error('Failed to send SuratApproved email: ' . $e->getMessage());
         }
 
+        // Archive to Google Drive (fail-safe)
+        try {
+            $driveService = new \App\Services\GoogleDriveService();
+            $driveService->archiveToDrive($fileName, 'Surat_Izin_Praktikum_' . $surat->nim . '_' . $surat->nomor_pengajuan . '.pdf');
+        } catch (\Exception $e) {
+            Log::error('Failed to archive to Google Drive: ' . $e->getMessage());
+        }
+
         return redirect()->route('admin.surat.show', $surat->id)
-            ->with('success', 'Pengajuan surat berhasil disetujui dan email notifikasi telah dikirim.');
+            ->with('success', 'Pengajuan surat berhasil disetujui, PDF di-generate otomatis, dan email notifikasi telah dikirim.');
     }
 
     /**
@@ -116,6 +164,8 @@ class AdminPengajuanSuratController extends Controller
         $surat->update([
             'status' => 'Ditolak',
             'catatan' => $request->catatan,
+            'diproses_oleh' => auth()->id(),
+            'diproses_at' => now(),
         ]);
 
         // Send Email Rejected
