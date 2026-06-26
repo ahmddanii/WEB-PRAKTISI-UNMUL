@@ -72,7 +72,7 @@ export default function Tentang({ pengurusInti, koordinatorMatkul }: TentangProp
                   >
                     {/* Background watermark logo */}
                     <div className="absolute top-8 right-[-24px] pointer-events-none opacity-[0.05] transition-all duration-700 group-hover:scale-110 rotate-[15deg] group-hover:rotate-[20deg]">
-                      <img src="/images/logo.png" className="w-50 h-50 object-contain filter brightness-0 invert" alt="" />
+                      <img src="/images/logo_clean.png" className="w-50 h-50 object-contain filter brightness-0 invert" alt="" />
                     </div>
 
                     {/* Photo */}
@@ -139,7 +139,7 @@ export default function Tentang({ pengurusInti, koordinatorMatkul }: TentangProp
                     >
                       {/* Background watermark logo */}
                       <div className="absolute top-8 right-[-24px] pointer-events-none opacity-[0.05] transition-all duration-700 group-hover:scale-110 rotate-[15deg] group-hover:rotate-[20deg]">
-                        <img src="/images/logo.png" className="w-36 h-36 object-contain filter brightness-0 invert" alt="" />
+                        <img src="/images/logo_clean.png" className="w-36 h-36 object-contain filter brightness-0 invert" alt="" />
                       </div>
 
                       {/* Photo */}
