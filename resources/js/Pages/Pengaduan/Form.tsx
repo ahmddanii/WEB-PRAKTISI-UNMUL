@@ -15,7 +15,7 @@ export default function Form() {
     const angkatanList = Array.from({ length: 5 }, (_, i) => currentYear - i);
 
     const form = useForm({
-        kategori: 'keluhan',
+        kategori: 'pengaduan',
         angkatan: '',
         mata_kuliah_id: '',
         isi_pengaduan: '',
@@ -96,10 +96,8 @@ export default function Form() {
                                     onChange={(e) => form.setData('kategori', e.target.value)}
                                     className="w-full bg-white border border-gray-300 rounded-lg p-3 text-sm focus:ring-2 focus:ring-[#203971] outline-none cursor-pointer"
                                 >
-                                    <option value="keluhan">Keluhan (Kendala/Masalah)</option>
-                                    <option value="saran">Saran (Masukan konstruktif)</option>
-                                    <option value="pertanyaan">Pertanyaan (Informasi/Konfirmasi)</option>
-                                    <option value="lainnya">Lainnya</option>
+                                    <option value="pengaduan">Pengaduan (Keluhan / Kendala)</option>
+                                    <option value="aspirasi">Aspirasi / Masukan</option>
                                 </select>
                                 {form.errors.kategori && (
                                     <span className="text-red-500 text-xs mt-1 block">{form.errors.kategori}</span>
