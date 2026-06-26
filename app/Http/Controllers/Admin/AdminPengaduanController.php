@@ -43,11 +43,18 @@ class AdminPengaduanController extends Controller
             $query->where('angkatan', $request->angkatan);
         }
 
+        // Mata Kuliah filter
+        if ($request->filled('mata_kuliah_id')) {
+            $query->where('mata_kuliah_id', $request->mata_kuliah_id);
+        }
+
         $pengaduans = $query->orderBy('created_at', 'desc')->paginate(10)->withQueryString();
+        $mataKuliahs = \App\Models\MataKuliah::orderBy('nama_mk')->get(['id', 'nama_mk']);
 
         return inertia('Admin/Pengaduan/Index', [
             'pengaduans' => $pengaduans,
-            'filters' => $request->only(['search', 'status', 'kategori', 'angkatan'])
+            'mataKuliahs' => $mataKuliahs,
+            'filters' => $request->only(['search', 'status', 'kategori', 'angkatan', 'mata_kuliah_id'])
         ]);
     }
 
@@ -93,7 +100,7 @@ class AdminPengaduanController extends Controller
     public function presentasi(Request $request)
     {
         return inertia('Admin/Pengaduan/Presentasi', [
-            'filters' => $request->only(['search', 'status', 'kategori', 'angkatan'])
+            'filters' => $request->only(['search', 'status', 'kategori', 'angkatan', 'mata_kuliah_id'])
         ]);
     }
 
@@ -117,6 +124,10 @@ class AdminPengaduanController extends Controller
 
         if ($request->filled('angkatan')) {
             $query->where('angkatan', $request->angkatan);
+        }
+
+        if ($request->filled('mata_kuliah_id')) {
+            $query->where('mata_kuliah_id', $request->mata_kuliah_id);
         }
 
         if ($request->filled('search')) {
