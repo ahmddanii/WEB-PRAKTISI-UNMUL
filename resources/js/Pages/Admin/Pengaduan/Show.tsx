@@ -49,12 +49,10 @@ export default function Show({ pengaduan, lampiranUrl }: PengaduanProps) {
 
     const getKategoriStyle = (kategori: string) => {
         switch (kategori) {
-            case 'keluhan':
+            case 'pengaduan':
                 return 'bg-rose-50 text-rose-700 border border-rose-100';
-            case 'saran':
+            case 'aspirasi':
                 return 'bg-teal-50 text-teal-700 border border-teal-100';
-            case 'pertanyaan':
-                return 'bg-indigo-50 text-indigo-700 border border-indigo-100';
             default:
                 return 'bg-gray-50 text-gray-700 border border-gray-100';
         }
