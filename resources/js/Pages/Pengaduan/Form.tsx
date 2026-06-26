@@ -1,40 +1,67 @@
-import React, { useState } from 'react';
-import { Head, useForm } from '@inertiajs/react';
+import React, { useState, useEffect } from 'react';
+import { Head, useForm, usePage } from '@inertiajs/react';
 import AppLayout from '../../Layouts/AppLayout';
 
 export default function Form() {
-    const [activeTab, setActiveTab] = useState<'create' | 'check'>('create');
+    const { props } = usePage();
+    const successTicket = (props.flash as any)?.success_ticket;
 
-    // 1. Form Pengaduan Baru
-    const formCreate = useForm({
-        kategori: 'Keluhan',
-        nama: '',
-        nim: '',
-        email: '',
-        no_hp: '',
-        matkul_terkait: '',
-        judul: '',
-        isi: '',
+    const [showSuccessModal, setShowSuccessModal] = useState(false);
+    const [matkulList, setMatkulList] = useState<{ id: number; nama_mk: string }[]>([]);
+    const [loadingMatkul, setLoadingMatkul] = useState(false);
+
+    // List of angkatan dynamically generated (e.g. current year to 4 years back)
+    const currentYear = new Date().getFullYear();
+    const angkatanList = Array.from({ length: 5 }, (_, i) => currentYear - i);
+
+    const form = useForm({
+        kategori: 'keluhan',
+        angkatan: '',
+        mata_kuliah_id: '',
+        isi_pengaduan: '',
         lampiran: null as File | null,
+        nama_pelapor: '',
+        nim_pelapor: '',
     });
 
-    // 2. Form Cek Status Tiket
-    const formCheck = useForm({
-        nim: '',
-        nomor_tiket: '',
-    });
+    useEffect(() => {
+        if (successTicket) {
+            setShowSuccessModal(true);
+        }
+    }, [successTicket]);
 
-    const handleCreateSubmit = (e: React.FormEvent) => {
+    // Fetch Mata Kuliah when Angkatan changes
+    useEffect(() => {
+        if (!form.data.angkatan) {
+            setMatkulList([]);
+            form.setData('mata_kuliah_id', '');
+            return;
+        }
+
+        setLoadingMatkul(true);
+        fetch(`/api/matkul-by-angkatan?angkatan=${form.data.angkatan}`)
+            .then((res) => {
+                if (!res.ok) throw new Error('Failed to load');
+                return res.json();
+            })
+            .then((data) => {
+                setMatkulList(data);
+                setLoadingMatkul(false);
+            })
+            .catch((err) => {
+                console.error(err);
+                setLoadingMatkul(false);
+            });
+    }, [form.data.angkatan]);
+
+    const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        formCreate.post('/pengaduan', {
+        form.post('/pengaduan', {
             forceFormData: true,
-            onSuccess: () => formCreate.reset(),
+            onSuccess: () => {
+                form.reset('isi_pengaduan', 'lampiran', 'nama_pelapor', 'nim_pelapor');
+            },
         });
-    };
-
-    const handleCheckSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        formCheck.post('/pengaduan/cek-status');
     };
 
     return (
@@ -42,7 +69,7 @@ export default function Form() {
             <Head title="Pengaduan & Aspirasi - PRAKTISI" />
 
             <section className="bg-gradient-to-b from-gray-50 to-white min-h-screen pt-12 pb-24">
-                <div className="max-w-3xl mx-auto px-6 md:px-8">
+                <div className="max-w-2xl mx-auto px-6 md:px-8">
                     
                     {/* Header */}
                     <div className="text-center mb-10">
@@ -52,274 +79,200 @@ export default function Form() {
                         <h1 className="text-4xl md:text-5xl font-extrabold text-[#203971] mt-4 tracking-tight">
                             Pengaduan & Aspirasi
                         </h1>
-                        <p className="text-gray-500 mt-3 text-base max-w-lg mx-auto">
-                            Saluran resmi bagi mahasiswa untuk menyampaikan keluhan, saran, pertanyaan, atau kendala seputar kegiatan praktikum.
+                        <p className="text-gray-500 mt-3 text-sm max-w-md mx-auto">
+                            Saluran resmi bagi praktikan untuk menyampaikan keluhan, saran, atau masukan seputar kegiatan praktikum secara aman.
                         </p>
                     </div>
 
-                    {/* Tab Navigation */}
-                    <div className="flex bg-gray-100 p-1.5 rounded-xl mb-8 border border-gray-200">
-                        <button
-                            onClick={() => setActiveTab('create')}
-                            className={`flex-1 py-3 text-sm font-bold font-mono tracking-wider rounded-lg transition-all cursor-pointer ${
-                                activeTab === 'create'
-                                    ? 'bg-[#203971] text-white shadow-sm'
-                                    : 'text-gray-600 hover:text-[#203971]'
-                            }`}
-                        >
-                            KIRIM PENGADUAN
-                        </button>
-                        <button
-                            onClick={() => setActiveTab('check')}
-                            className={`flex-1 py-3 text-sm font-bold font-mono tracking-wider rounded-lg transition-all cursor-pointer ${
-                                activeTab === 'check'
-                                    ? 'bg-[#203971] text-white shadow-sm'
-                                    : 'text-gray-600 hover:text-[#203971]'
-                            }`}
-                        >
-                            LACAK TIKET
-                        </button>
-                    </div>
-
-                    {/* Tab 1: Form Pengaduan Baru */}
-                    {activeTab === 'create' && (
-                        <div className="bg-white border border-gray-200 rounded-2xl p-6 md:p-8 shadow-sm transition-all">
-                            <form onSubmit={handleCreateSubmit} className="space-y-6">
-                                
-                                {/* Kategori */}
-                                <div>
-                                    <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Kategori Aspirasi</label>
-                                    <select
-                                        value={formCreate.data.kategori}
-                                        onChange={(e) => formCreate.setData('kategori', e.target.value)}
-                                        className="w-full bg-white border border-gray-300 rounded-lg p-3 text-sm focus:ring-2 focus:ring-[#203971] outline-none"
-                                    >
-                                        <option value="Keluhan">Keluhan (Kendala/Masalah)</option>
-                                        <option value="Saran">Saran (Masukan konstruktif)</option>
-                                        <option value="Pertanyaan">Pertanyaan (Informasi/Konfirmasi)</option>
-                                        <option value="Lainnya">Lainnya</option>
-                                    </select>
-                                    {formCreate.errors.kategori && (
-                                        <span className="text-red-500 text-xs mt-1 block">{formCreate.errors.kategori}</span>
-                                    )}
-                                </div>
-
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    {/* Nama Lengkap */}
-                                    <div>
-                                        <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Nama Lengkap</label>
-                                        <input
-                                            type="text"
-                                            value={formCreate.data.nama}
-                                            onChange={(e) => formCreate.setData('nama', e.target.value)}
-                                            required
-                                            placeholder="Masukkan nama lengkap Anda"
-                                            className="w-full bg-white border border-gray-300 rounded-lg p-3 text-sm focus:ring-2 focus:ring-[#203971] outline-none"
-                                        />
-                                        {formCreate.errors.nama && (
-                                            <span className="text-red-500 text-xs mt-1 block">{formCreate.errors.nama}</span>
-                                        )}
-                                    </div>
-
-                                    {/* NIM */}
-                                    <div>
-                                        <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">NIM</label>
-                                        <input
-                                            type="text"
-                                            value={formCreate.data.nim}
-                                            onChange={(e) => formCreate.setData('nim', e.target.value)}
-                                            required
-                                            placeholder="Cth: 2409116000"
-                                            className="w-full bg-white border border-gray-300 rounded-lg p-3 text-sm focus:ring-2 focus:ring-[#203971] outline-none"
-                                        />
-                                        {formCreate.errors.nim && (
-                                            <span className="text-red-500 text-xs mt-1 block">{formCreate.errors.nim}</span>
-                                        )}
-                                    </div>
-                                </div>
-
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    {/* Email */}
-                                    <div>
-                                        <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Email Aktif</label>
-                                        <input
-                                            type="email"
-                                            value={formCreate.data.email}
-                                            onChange={(e) => formCreate.setData('email', e.target.value)}
-                                            required
-                                            placeholder="Notifikasi respons dikirim ke email ini"
-                                            className="w-full bg-white border border-gray-300 rounded-lg p-3 text-sm focus:ring-2 focus:ring-[#203971] outline-none"
-                                        />
-                                        {formCreate.errors.email && (
-                                            <span className="text-red-500 text-xs mt-1 block">{formCreate.errors.email}</span>
-                                        )}
-                                    </div>
-
-                                    {/* Nomor HP */}
-                                    <div>
-                                        <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Nomor HP / WhatsApp (Opsional)</label>
-                                        <input
-                                            type="text"
-                                            value={formCreate.data.no_hp}
-                                            onChange={(e) => formCreate.setData('no_hp', e.target.value)}
-                                            placeholder="Cth: 08123456789"
-                                            className="w-full bg-white border border-gray-300 rounded-lg p-3 text-sm focus:ring-2 focus:ring-[#203971] outline-none"
-                                        />
-                                        {formCreate.errors.no_hp && (
-                                            <span className="text-red-500 text-xs mt-1 block">{formCreate.errors.no_hp}</span>
-                                        )}
-                                    </div>
-                                </div>
-
-                                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                    {/* Judul Pengaduan */}
-                                    <div className="md:col-span-2">
-                                        <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Judul Pengaduan / Masalah</label>
-                                        <input
-                                            type="text"
-                                            value={formCreate.data.judul}
-                                            onChange={(e) => formCreate.setData('judul', e.target.value)}
-                                            required
-                                            placeholder="Ringkasan singkat keluhan/saran Anda"
-                                            className="w-full bg-white border border-gray-300 rounded-lg p-3 text-sm focus:ring-2 focus:ring-[#203971] outline-none"
-                                        />
-                                        {formCreate.errors.judul && (
-                                            <span className="text-red-500 text-xs mt-1 block">{formCreate.errors.judul}</span>
-                                        )}
-                                    </div>
-
-                                    {/* Matkul Terkait */}
-                                    <div>
-                                        <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Mata Kuliah Terkait (Opsional)</label>
-                                        <input
-                                            type="text"
-                                            value={formCreate.data.matkul_terkait}
-                                            onChange={(e) => formCreate.setData('matkul_terkait', e.target.value)}
-                                            placeholder="Cth: Rekayasa Perangkat Lunak"
-                                            className="w-full bg-white border border-gray-300 rounded-lg p-3 text-sm focus:ring-2 focus:ring-[#203971] outline-none"
-                                        />
-                                        {formCreate.errors.matkul_terkait && (
-                                            <span className="text-red-500 text-xs mt-1 block">{formCreate.errors.matkul_terkait}</span>
-                                        )}
-                                    </div>
-                                </div>
-
-                                {/* Isi Pengaduan */}
-                                <div>
-                                    <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Rincian Pengaduan / Aspirasi</label>
-                                    <textarea
-                                        value={formCreate.data.isi}
-                                        onChange={(e) => formCreate.setData('isi', e.target.value)}
-                                        required
-                                        rows={6}
-                                        placeholder="Jelaskan secara mendetail kendala, saran, atau pertanyaan yang ingin Anda sampaikan"
-                                        className="w-full bg-white border border-gray-300 rounded-lg p-3 text-sm focus:ring-2 focus:ring-[#203971] outline-none resize-none"
-                                    />
-                                    {formCreate.errors.isi && (
-                                        <span className="text-red-500 text-xs mt-1 block">{formCreate.errors.isi}</span>
-                                    )}
-                                </div>
-
-                                {/* Lampiran */}
-                                <div>
-                                    <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">File Lampiran / Bukti (Opsional)</label>
-                                    <input
-                                        type="file"
-                                        accept=".pdf,image/*"
-                                        onChange={(e) => {
-                                            if (e.target.files && e.target.files.length > 0) {
-                                                formCreate.setData('lampiran', e.target.files[0]);
-                                            }
-                                        }}
-                                        className="w-full text-sm text-gray-500 file:mr-4 file:py-2.5 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-[#203971]/10 file:text-[#203971] hover:file:bg-[#203971]/20 cursor-pointer"
-                                    />
-                                    <p className="text-[11px] text-gray-400 mt-1">Maksimum ukuran file: 3MB (.pdf, .jpg, .jpeg, .png)</p>
-                                    {formCreate.errors.lampiran && (
-                                        <span className="text-red-500 text-xs mt-1 block">{formCreate.errors.lampiran}</span>
-                                    )}
-                                </div>
-
-                                {/* Submit Button */}
-                                <div className="pt-2">
-                                    <button
-                                        type="submit"
-                                        disabled={formCreate.processing}
-                                        className="w-full bg-[#203971] hover:bg-[#182c57] text-white py-3 rounded-lg font-bold font-mono tracking-widest text-sm cursor-pointer transition-colors disabled:opacity-80"
-                                    >
-                                        {formCreate.processing ? 'MENGIRIMKAN...' : 'SUBMIT ASPIRASI'}
-                                    </button>
-                                </div>
-
-                            </form>
-                        </div>
-                    )}
-
-                    {/* Tab 2: Lacak Tiket Pengaduan */}
-                    {activeTab === 'check' && (
-                        <div className="bg-white border border-gray-200 rounded-2xl p-6 md:p-8 shadow-sm transition-all max-w-md mx-auto">
-                            <form onSubmit={handleCheckSubmit} className="space-y-5">
-                                
-                                <div className="text-center mb-4">
-                                    <span className="material-symbols-outlined text-gray-400 text-5xl">support_agent</span>
-                                    <h3 className="text-lg font-bold text-[#203971] mt-2">Lacak Tiket Pengaduan</h3>
-                                    <p className="text-xs text-gray-500 mt-1">Masukkan NIM & nomor tiket Anda</p>
-                                </div>
-
-                                {formCheck.errors.error && (
-                                    <div className="bg-red-50 border border-red-200 text-red-700 text-xs p-3 rounded-lg font-medium">
-                                        {formCheck.errors.error}
-                                    </div>
+                    {/* Form Container */}
+                    <div className="bg-white border border-gray-200 rounded-2xl p-6 md:p-8 shadow-sm transition-all">
+                        <form onSubmit={handleSubmit} className="space-y-6">
+                            
+                            {/* Kategori */}
+                            <div>
+                                <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Kategori Aspirasi</label>
+                                <select
+                                    value={form.data.kategori}
+                                    onChange={(e) => form.setData('kategori', e.target.value)}
+                                    className="w-full bg-white border border-gray-300 rounded-lg p-3 text-sm focus:ring-2 focus:ring-[#203971] outline-none cursor-pointer"
+                                >
+                                    <option value="keluhan">Keluhan (Kendala/Masalah)</option>
+                                    <option value="saran">Saran (Masukan konstruktif)</option>
+                                    <option value="pertanyaan">Pertanyaan (Informasi/Konfirmasi)</option>
+                                    <option value="lainnya">Lainnya</option>
+                                </select>
+                                {form.errors.kategori && (
+                                    <span className="text-red-500 text-xs mt-1 block">{form.errors.kategori}</span>
                                 )}
+                            </div>
 
-                                {/* NIM */}
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                {/* Angkatan */}
                                 <div>
-                                    <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">NIM Anda</label>
-                                    <input
-                                        type="text"
-                                        value={formCheck.data.nim}
-                                        onChange={(e) => formCheck.setData('nim', e.target.value)}
+                                    <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Angkatan Anda</label>
+                                    <select
+                                        value={form.data.angkatan}
+                                        onChange={(e) => form.setData('angkatan', e.target.value)}
                                         required
-                                        placeholder="Cth: 2409116000"
-                                        className="w-full bg-white border border-gray-300 rounded-lg p-3 text-sm focus:ring-2 focus:ring-[#203971] outline-none"
-                                    />
-                                    {formCheck.errors.nim && (
-                                        <span className="text-red-500 text-xs mt-1 block">{formCheck.errors.nim}</span>
-                                    )}
-                                </div>
-
-                                {/* Nomor Tiket */}
-                                <div>
-                                    <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Nomor Tiket</label>
-                                    <input
-                                        type="text"
-                                        value={formCheck.data.nomor_tiket}
-                                        onChange={(e) => formCheck.setData('nomor_tiket', e.target.value)}
-                                        required
-                                        placeholder="Cth: #T00001"
-                                        className="w-full bg-white border border-gray-300 rounded-lg p-3 text-sm focus:ring-2 focus:ring-[#203971] outline-none"
-                                    />
-                                    {formCheck.errors.nomor_tiket && (
-                                        <span className="text-red-500 text-xs mt-1 block">{formCheck.errors.nomor_tiket}</span>
-                                    )}
-                                </div>
-
-                                {/* Submit button */}
-                                <div className="pt-2">
-                                    <button
-                                        type="submit"
-                                        disabled={formCheck.processing}
-                                        className="w-full bg-[#203971] hover:bg-[#182c57] text-white py-3 rounded-lg font-bold font-mono tracking-widest text-sm cursor-pointer transition-colors disabled:opacity-80"
+                                        className="w-full bg-white border border-gray-300 rounded-lg p-3 text-sm focus:ring-2 focus:ring-[#203971] outline-none cursor-pointer"
                                     >
-                                        {formCheck.processing ? 'MENCARI TIKET...' : 'CARI TIKET'}
-                                    </button>
+                                        <option value="">Pilih Angkatan</option>
+                                        {angkatanList.map((yr) => (
+                                            <option key={yr} value={yr}>
+                                                Angkatan {yr}
+                                            </option>
+                                        ))}
+                                    </select>
+                                    {form.errors.angkatan && (
+                                        <span className="text-red-500 text-xs mt-1 block">{form.errors.angkatan}</span>
+                                    )}
                                 </div>
 
-                            </form>
-                        </div>
-                    )}
+                                {/* Mata Kuliah Terkait */}
+                                <div>
+                                    <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Mata Kuliah Terkait</label>
+                                    <select
+                                        value={form.data.mata_kuliah_id}
+                                        onChange={(e) => form.setData('mata_kuliah_id', e.target.value)}
+                                        disabled={!form.data.angkatan || loadingMatkul}
+                                        className="w-full bg-white border border-gray-300 rounded-lg p-3 text-sm focus:ring-2 focus:ring-[#203971] outline-none disabled:bg-gray-50 disabled:cursor-not-allowed cursor-pointer"
+                                    >
+                                        <option value="">
+                                            {loadingMatkul ? 'Memuat mata kuliah...' : 'Umum / Tidak spesifik'}
+                                        </option>
+                                        {matkulList.map((mk) => (
+                                            <option key={mk.id} value={mk.id}>
+                                                {mk.nama_mk}
+                                            </option>
+                                        ))}
+                                    </select>
+                                    {form.errors.mata_kuliah_id && (
+                                        <span className="text-red-500 text-xs mt-1 block">{form.errors.mata_kuliah_id}</span>
+                                    )}
+                                </div>
+                            </div>
+
+                            {/* Isi Rincian Pengaduan */}
+                            <div>
+                                <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Isi Rincian Pengaduan / Aspirasi</label>
+                                <textarea
+                                    value={form.data.isi_pengaduan}
+                                    onChange={(e) => form.setData('isi_pengaduan', e.target.value)}
+                                    required
+                                    rows={6}
+                                    placeholder="Jelaskan secara mendetail kendala, saran, atau pertanyaan yang ingin Anda sampaikan"
+                                    className="w-full bg-white border border-gray-300 rounded-lg p-3 text-sm focus:ring-2 focus:ring-[#203971] outline-none resize-none"
+                                />
+                                {form.errors.isi_pengaduan && (
+                                    <span className="text-red-500 text-xs mt-1 block">{form.errors.isi_pengaduan}</span>
+                                )}
+                            </div>
+
+                            {/* Lampiran */}
+                            <div>
+                                <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">File Lampiran / Bukti (Opsional)</label>
+                                <input
+                                    type="file"
+                                    accept=".pdf,image/*"
+                                    onChange={(e) => {
+                                        if (e.target.files && e.target.files.length > 0) {
+                                            form.setData('lampiran', e.target.files[0]);
+                                        }
+                                    }}
+                                    className="w-full text-sm text-gray-500 file:mr-4 file:py-2.5 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-[#203971]/10 file:text-[#203971] hover:file:bg-[#203971]/20 cursor-pointer"
+                                />
+                                <p className="text-[11px] text-gray-400 mt-1">Maksimum ukuran file: 3MB (.pdf, .jpg, .jpeg, .png)</p>
+                                {form.errors.lampiran && (
+                                    <span className="text-red-500 text-xs mt-1 block">{form.errors.lampiran}</span>
+                                )}
+                            </div>
+
+                            <div className="border-t border-gray-150 pt-5">
+                                <h3 className="text-xs font-black font-mono tracking-widest text-[#203971] uppercase mb-4">
+                                    Identitas Pengadu (Opsional)
+                                </h3>
+
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    {/* Nama Pelapor */}
+                                    <div>
+                                        <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Nama Lengkap</label>
+                                        <input
+                                            type="text"
+                                            value={form.data.nama_pelapor}
+                                            onChange={(e) => form.setData('nama_pelapor', e.target.value)}
+                                            placeholder="Nama Anda"
+                                            className="w-full bg-white border border-gray-300 rounded-lg p-3 text-sm focus:ring-2 focus:ring-[#203971] outline-none"
+                                        />
+                                        {form.errors.nama_pelapor && (
+                                            <span className="text-red-500 text-xs mt-1 block">{form.errors.nama_pelapor}</span>
+                                        )}
+                                    </div>
+
+                                    {/* NIM Pelapor */}
+                                    <div>
+                                        <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">NIM</label>
+                                        <input
+                                            type="text"
+                                            value={form.data.nim_pelapor}
+                                            onChange={(e) => form.setData('nim_pelapor', e.target.value)}
+                                            placeholder="NIM Anda"
+                                            className="w-full bg-white border border-gray-300 rounded-lg p-3 text-sm focus:ring-2 focus:ring-[#203971] outline-none"
+                                        />
+                                        {form.errors.nim_pelapor && (
+                                            <span className="text-red-500 text-xs mt-1 block">{form.errors.nim_pelapor}</span>
+                                        )}
+                                    </div>
+                                </div>
+                                <p className="text-[11px] text-gray-400 mt-2.5">
+                                    * Boleh dikosongkan. Pengaduan Anda tetap akan kami terima secara anonim.
+                                </p>
+                            </div>
+
+                            {/* Submit Button */}
+                            <div className="pt-2">
+                                <button
+                                    type="submit"
+                                    disabled={form.processing}
+                                    className="w-full bg-[#203971] hover:bg-[#182c57] text-white py-3 rounded-lg font-bold font-mono tracking-widest text-sm cursor-pointer transition-colors disabled:opacity-80"
+                                >
+                                    {form.processing ? 'MENGIRIMKAN...' : 'SUBMIT ASPIRASI'}
+                                </button>
+                            </div>
+
+                        </form>
+                    </div>
 
                 </div>
             </section>
+
+            {/* Success Dialog Modal */}
+            {showSuccessModal && (
+                <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fade-in">
+                    <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl text-center space-y-4 animate-scale-up">
+                        <div className="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto">
+                            <span className="material-symbols-outlined text-3xl">check_circle</span>
+                        </div>
+                        
+                        <div className="space-y-1">
+                            <h3 className="text-lg font-bold text-gray-900">Pengaduan Berhasil Dikirim!</h3>
+                            <p className="text-xs text-gray-500 font-mono">
+                                Nomor Tiket: <span className="font-bold text-[#203971]">{successTicket}</span>
+                            </p>
+                        </div>
+
+                        <p className="text-sm text-gray-600 leading-relaxed">
+                            Masukan Anda akan dikumpulkan dan dibahas pada rapat evaluasi aslab berikutnya sebagai bahan evaluasi bersama. Terima kasih atas kepedulian Anda!
+                        </p>
+
+                        <button
+                            onClick={() => setShowSuccessModal(false)}
+                            className="w-full bg-[#203971] hover:bg-[#182c57] text-white py-2 rounded-lg font-bold font-mono text-xs tracking-wider cursor-pointer transition-colors"
+                        >
+                            TUTUP
+                        </button>
+                    </div>
+                </div>
+            )}
         </AppLayout>
     );
 }
