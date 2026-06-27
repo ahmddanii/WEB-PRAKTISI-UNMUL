@@ -59,7 +59,7 @@ export default function Form() {
             .then((data) => {
                 setMatkulList(data);
                 setLoadingMatkul(false);
-                
+
                 // If current selected matkul is not in the new course list, reset it
                 const exists = data.some((m: any) => m.nama_mk === formCreate.data.matkul);
                 if (!exists) {
@@ -121,7 +121,7 @@ export default function Form() {
 
             <section className="bg-gradient-to-b from-gray-50 to-white min-h-screen pt-12 pb-24">
                 <div className="max-w-2xl mx-auto px-6 md:px-8">
-                    
+
                     {/* Header */}
                     <div className="text-center mb-10">
                         <span className="font-mono text-xs font-bold text-[#455d97] uppercase tracking-widest bg-[#203971]/5 px-3 py-1.5 rounded-full">
@@ -131,14 +131,14 @@ export default function Form() {
                             Pengajuan Surat Izin
                         </h1>
                         <p className="text-gray-500 mt-3 text-sm max-w-md mx-auto">
-                            Ajukan Surat Izin Tidak Hadir Praktikum secara cepat dan digital untuk ditinjau oleh asisten laboratorium.
+                            Ajukan Surat Izin Tidak Hadir Praktikum secara cepat dan digital untuk ditinjau oleh asisten praktikum.
                         </p>
                     </div>
 
                     {/* Form Container */}
                     <div className="bg-white border border-gray-200 rounded-2xl p-6 md:p-8 shadow-sm transition-all">
                         <form onSubmit={handleCreateSubmit} className="space-y-6">
-                            
+
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 {/* Nama Lengkap */}
                                 <div>
@@ -385,7 +385,7 @@ export default function Form() {
                         <div className="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto">
                             <span className="material-symbols-outlined text-3xl">check_circle</span>
                         </div>
-                        
+
                         <div className="space-y-1">
                             <h3 className="text-lg font-bold text-gray-900">Pengajuan Berhasil Dikirim!</h3>
                             <p className="text-xs text-gray-500 font-mono">
