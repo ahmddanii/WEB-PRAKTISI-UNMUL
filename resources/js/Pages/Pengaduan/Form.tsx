@@ -66,38 +66,38 @@ export default function Form() {
 
     return (
         <AppLayout>
-            <Head title="Pengaduan & Aspirasi - PRAKTISI" />
+            <Head title="Evaluasi & Saran - PRAKTISI" />
 
             <section className="bg-gradient-to-b from-gray-50 to-white min-h-screen pt-12 pb-24">
                 <div className="max-w-2xl mx-auto px-6 md:px-8">
-                    
+
                     {/* Header */}
                     <div className="text-center mb-10">
                         <span className="font-mono text-xs font-bold text-[#455d97] uppercase tracking-widest bg-[#203971]/5 px-3 py-1.5 rounded-full">
-                            ASPIRASI MAHASISWA
+                            Evaluasi PRAKTISI
                         </span>
                         <h1 className="text-4xl md:text-5xl font-extrabold text-[#203971] mt-4 tracking-tight">
-                            Pengaduan & Aspirasi
+                            Evaluasi & Saran
                         </h1>
                         <p className="text-gray-500 mt-3 text-sm max-w-md mx-auto">
-                            Saluran resmi bagi praktikan untuk menyampaikan keluhan, saran, atau masukan seputar kegiatan praktikum secara aman.
+                            Sarana untuk mendengar suara kalian—baik apresiasi maupun masukan berharga—terhadap Asisten Praktikum di Program Studi Sistem Informasi Universitas Mulawarman.
                         </p>
                     </div>
 
                     {/* Form Container */}
                     <div className="bg-white border border-gray-200 rounded-2xl p-6 md:p-8 shadow-sm transition-all">
                         <form onSubmit={handleSubmit} className="space-y-6">
-                            
+
                             {/* Kategori */}
                             <div>
-                                <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Kategori Aspirasi</label>
+                                <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Kategori</label>
                                 <select
                                     value={form.data.kategori}
                                     onChange={(e) => form.setData('kategori', e.target.value)}
                                     className="w-full bg-white border border-gray-300 rounded-lg p-3 text-sm focus:ring-2 focus:ring-[#203971] outline-none cursor-pointer"
                                 >
-                                    <option value="pengaduan">Pengaduan (Keluhan / Kendala)</option>
-                                    <option value="aspirasi">Aspirasi / Masukan</option>
+                                    <option value="pengaduan">Evaluasi</option>
+                                    <option value="aspirasi">Saran</option>
                                 </select>
                                 {form.errors.kategori && (
                                     <span className="text-red-500 text-xs mt-1 block">{form.errors.kategori}</span>
@@ -107,7 +107,7 @@ export default function Form() {
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 {/* Angkatan */}
                                 <div>
-                                    <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Angkatan Anda</label>
+                                    <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Angkatan</label>
                                     <select
                                         value={form.data.angkatan}
                                         onChange={(e) => form.setData('angkatan', e.target.value)}
@@ -128,7 +128,7 @@ export default function Form() {
 
                                 {/* Mata Kuliah Terkait */}
                                 <div>
-                                    <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Mata Kuliah Terkait</label>
+                                    <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Mata Kuliah</label>
                                     <select
                                         value={form.data.mata_kuliah_id}
                                         onChange={(e) => form.setData('mata_kuliah_id', e.target.value)}
@@ -152,7 +152,7 @@ export default function Form() {
 
                             {/* Isi Rincian Pengaduan */}
                             <div>
-                                <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Isi Rincian Pengaduan / Aspirasi</label>
+                                <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Isi Rincian Evaluasi / Saran</label>
                                 <textarea
                                     value={form.data.isi_pengaduan}
                                     onChange={(e) => form.setData('isi_pengaduan', e.target.value)}
@@ -187,7 +187,7 @@ export default function Form() {
 
                             <div className="border-t border-gray-150 pt-5">
                                 <h3 className="text-xs font-black font-mono tracking-widest text-[#203971] uppercase mb-4">
-                                    Identitas Pengadu (Opsional)
+                                    Identitas Pelapor (Opsional)
                                 </h3>
 
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -250,7 +250,7 @@ export default function Form() {
                         <div className="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto">
                             <span className="material-symbols-outlined text-3xl">check_circle</span>
                         </div>
-                        
+
                         <div className="space-y-1">
                             <h3 className="text-lg font-bold text-gray-900">Pengaduan Berhasil Dikirim!</h3>
                             <p className="text-xs text-gray-500 font-mono">
