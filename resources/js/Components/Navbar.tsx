@@ -22,7 +22,10 @@ export default function Navbar() {
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
         setIsDropdownOpen(false);
       }
     };
@@ -31,21 +34,58 @@ export default function Navbar() {
   }, []);
 
   return (
-    <nav className={`fixed top-0 w-full z-50 bg-white/70 backdrop-blur-md border-b border-gray-100 transition-all duration-300 ${scrolled ? 'shadow-sm' : ''}`}>
+    <nav
+      className={`fixed top-0 w-full z-50 bg-white/70 backdrop-blur-md border-b border-gray-100 transition-all duration-300 ${scrolled ? 'shadow-sm' : ''}`}
+    >
       <div className="relative flex justify-between items-center h-16 px-6 md:px-8 max-w-[1280px] mx-auto">
-
         <div className="flex items-center gap-3">
-          <img alt="PRAKTISI Logo" className="h-9 w-auto object-contain" src="/images/logo.png" />
-          <span className="font-semibold text-primary tracking-tight text-xl font-['Montserrat']">PRAKTISI</span>
+          <img
+            alt="PRAKTISI Logo"
+            className="h-9 w-auto object-contain"
+            src="/images/logo.png"
+          />
+          <span className="font-semibold text-primary tracking-tight text-xl font-['Montserrat']">
+            PRAKTISI
+          </span>
         </div>
 
         <div className="hidden md:flex items-center space-x-4 lg:space-x-8 absolute left-1/2 -translate-x-1/2">
-          <Link className="text-gray-900 hover:text-gray-900/80 transition-colors text-base font-medium" href="/">Beranda</Link>
-          <Link className="text-gray-900 hover:text-gray-900/80 transition-colors text-base font-medium" href="/dokumen">Dokumen</Link>
-          <Link className="text-gray-900 hover:text-gray-900/80 transition-colors text-base font-medium" href="/jadwal">Jadwal</Link>
-          <Link className="text-gray-900 hover:text-gray-900/80 transition-colors text-base font-medium" href="/berita">Berita</Link>
-          <Link className="text-gray-900 hover:text-gray-900/80 transition-colors text-base font-medium" href="/kontak">Kontak</Link>
-          <Link className="text-gray-900 hover:text-gray-900/80 transition-colors text-base font-medium" href="/tentang">Tentang</Link>
+          <Link
+            className="text-gray-900 hover:text-gray-900/80 transition-colors text-base font-medium"
+            href="/"
+          >
+            Beranda
+          </Link>
+          <Link
+            className="text-gray-900 hover:text-gray-900/80 transition-colors text-base font-medium"
+            href="/dokumen"
+          >
+            Dokumen
+          </Link>
+          <Link
+            className="text-gray-900 hover:text-gray-900/80 transition-colors text-base font-medium"
+            href="/jadwal"
+          >
+            Jadwal
+          </Link>
+          <Link
+            className="text-gray-900 hover:text-gray-900/80 transition-colors text-base font-medium"
+            href="/berita"
+          >
+            Berita
+          </Link>
+          <Link
+            className="text-gray-900 hover:text-gray-900/80 transition-colors text-base font-medium"
+            href="/kontak"
+          >
+            Kontak
+          </Link>
+          <Link
+            className="text-gray-900 hover:text-gray-900/80 transition-colors text-base font-medium"
+            href="/tentang"
+          >
+            Tentang
+          </Link>
         </div>
 
         <div className="hidden md:flex items-center">
@@ -55,7 +95,9 @@ export default function Navbar() {
               className="flex items-center gap-1 bg-primary text-white hover:bg-primary/90 px-3.5 py-1.5 rounded-lg transition-all duration-200 text-base font-medium focus:outline-none cursor-pointer shadow-sm hover:shadow active:scale-95"
             >
               <span>Layanan</span>
-              <span className={`material-symbols-outlined text-lg transition-transform duration-200 ${isDropdownOpen ? 'rotate-180' : ''}`}>
+              <span
+                className={`material-symbols-outlined text-lg transition-transform duration-200 ${isDropdownOpen ? 'rotate-180' : ''}`}
+              >
                 expand_more
               </span>
             </button>
@@ -84,41 +126,88 @@ export default function Navbar() {
           onClick={() => setIsOpen(!isOpen)}
           className="md:hidden text-primary focus:outline-none flex items-center"
         >
-          <span className="material-symbols-outlined text-3xl">{isOpen ? 'close' : 'menu'}</span>
+          <span className="material-symbols-outlined text-3xl">
+            {isOpen ? 'close' : 'menu'}
+          </span>
         </button>
-
       </div>
 
-      <div className={`md:hidden bg-white border-t border-gray-200 shadow-lg absolute w-full left-0 top-16 transition-all duration-300 ${isOpen ? 'block' : 'hidden'}`}>
+      <div
+        className={`md:hidden bg-white border-t border-gray-200 shadow-lg absolute w-full left-0 top-16 transition-all duration-300 ${isOpen ? 'block' : 'hidden'}`}
+      >
         <div className="flex flex-col px-6 py-4 space-y-4">
-          <Link onClick={() => setIsOpen(false)} className="text-gray-900 hover:text-gray-900/80 transition-colors text-base font-medium" href="/">Beranda</Link>
-          <Link onClick={() => setIsOpen(false)} className="text-gray-900 hover:text-gray-900/80 transition-colors text-base font-medium" href="/dokumen">Dokumen</Link>
-          <Link onClick={() => setIsOpen(false)} className="text-gray-900 hover:text-gray-900/80 transition-colors text-base font-medium" href="/jadwal">Jadwal</Link>
-          <Link onClick={() => setIsOpen(false)} className="text-gray-900 hover:text-gray-900/80 transition-colors text-base font-medium" href="/berita">Berita</Link>
-          <Link onClick={() => setIsOpen(false)} className="text-gray-900 hover:text-gray-900/80 transition-colors text-base font-medium" href="/kontak">Kontak</Link>
-          <Link onClick={() => setIsOpen(false)} className="text-gray-900 hover:text-gray-900/80 transition-colors text-base font-medium" href="/tentang">Tentang</Link>
-          
+          <Link
+            onClick={() => setIsOpen(false)}
+            className="text-gray-900 hover:text-gray-900/80 transition-colors text-base font-medium"
+            href="/"
+          >
+            Beranda
+          </Link>
+          <Link
+            onClick={() => setIsOpen(false)}
+            className="text-gray-900 hover:text-gray-900/80 transition-colors text-base font-medium"
+            href="/dokumen"
+          >
+            Dokumen
+          </Link>
+          <Link
+            onClick={() => setIsOpen(false)}
+            className="text-gray-900 hover:text-gray-900/80 transition-colors text-base font-medium"
+            href="/jadwal"
+          >
+            Jadwal
+          </Link>
+          <Link
+            onClick={() => setIsOpen(false)}
+            className="text-gray-900 hover:text-gray-900/80 transition-colors text-base font-medium"
+            href="/berita"
+          >
+            Berita
+          </Link>
+          <Link
+            onClick={() => setIsOpen(false)}
+            className="text-gray-900 hover:text-gray-900/80 transition-colors text-base font-medium"
+            href="/kontak"
+          >
+            Kontak
+          </Link>
+          <Link
+            onClick={() => setIsOpen(false)}
+            className="text-gray-900 hover:text-gray-900/80 transition-colors text-base font-medium"
+            href="/tentang"
+          >
+            Tentang
+          </Link>
+
           <div className="flex flex-col">
             <button
               onClick={() => setIsMobileDropdownOpen(!isMobileDropdownOpen)}
               className="flex justify-between items-center bg-primary text-white hover:bg-primary/90 px-4 py-2 rounded-lg text-base font-medium w-full text-left focus:outline-none shadow-sm cursor-pointer"
             >
               <span>Layanan</span>
-              <span className={`material-symbols-outlined transition-transform duration-200 ${isMobileDropdownOpen ? 'rotate-180' : ''}`}>
+              <span
+                className={`material-symbols-outlined transition-transform duration-200 ${isMobileDropdownOpen ? 'rotate-180' : ''}`}
+              >
                 expand_more
               </span>
             </button>
             {isMobileDropdownOpen && (
               <div className="flex flex-col pl-4 space-y-3 border-l-2 border-primary/20 mt-2">
                 <Link
-                  onClick={() => { setIsOpen(false); setIsMobileDropdownOpen(false); }}
+                  onClick={() => {
+                    setIsOpen(false);
+                    setIsMobileDropdownOpen(false);
+                  }}
                   className="text-gray-900 hover:text-gray-900/80 transition-colors text-base font-medium py-1"
                   href="/pengaduan"
                 >
                   Pengaduan
                 </Link>
                 <Link
-                  onClick={() => { setIsOpen(false); setIsMobileDropdownOpen(false); }}
+                  onClick={() => {
+                    setIsOpen(false);
+                    setIsMobileDropdownOpen(false);
+                  }}
                   className="text-gray-900 hover:text-gray-900/80 transition-colors text-base font-medium py-1"
                   href="/pengajuan-surat"
                 >

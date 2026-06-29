@@ -10,7 +10,6 @@ interface BeritaProps {
 }
 
 export default function Berita({ semuaBerita }: BeritaProps) {
-
   return (
     <AppLayout>
       <Head title="Berita & Pengumuman" />
@@ -23,7 +22,8 @@ export default function Berita({ semuaBerita }: BeritaProps) {
                 Berita & Pengumuman
               </h1>
               <p className="text-lg text-gray-600">
-                Temukan update kegiatan, inovasi, dan pengumuman penting terkait praktikum.
+                Temukan update kegiatan, inovasi, dan pengumuman penting terkait
+                praktikum.
               </p>
             </div>
           </div>
@@ -34,32 +34,40 @@ export default function Berita({ semuaBerita }: BeritaProps) {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
             {semuaBerita.data.length > 0 ? (
               semuaBerita.data.map((item) => (
-                <article key={item.id} className="group bg-white border border-gray-200 p-5 rounded-lg shadow-sm hover:shadow-md transition-all hover:-translate-y-1 duration-300 flex flex-col h-full">
-                  <Link href={`/berita/${item.slug}`} className="aspect-[16/9] mb-5 overflow-hidden rounded bg-gray-100 flex-shrink-0 block">
+                <article
+                  key={item.id}
+                  className="group bg-white border border-gray-200 p-5 rounded-lg shadow-sm hover:shadow-md transition-all hover:-translate-y-1 duration-300 flex flex-col h-full"
+                >
+                  <Link
+                    href={`/berita/${item.slug}`}
+                    className="aspect-[16/9] mb-5 overflow-hidden rounded bg-gray-100 flex-shrink-0 block"
+                  >
                     {item.thumbnail ? (
-                      <img 
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
-                        src={`/storage/${item.thumbnail}`} 
-                        alt={item.judul} 
+                      <img
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        src={`/storage/${item.thumbnail}`}
+                        alt={item.judul}
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center text-gray-400 group-hover:scale-105 transition-transform duration-500">
-                        <span className="material-symbols-outlined text-4xl">image</span>
+                        <span className="material-symbols-outlined text-4xl">
+                          image
+                        </span>
                       </div>
                     )}
                   </Link>
-                  
+
                   <div className="space-y-2 flex flex-col flex-grow">
                     <span className="text-[10px] text-[#bc000a] font-bold uppercase tracking-wider">
                       {item.kategori || 'Umum'} • {formatDate(item.created_at)}
                     </span>
-                    
+
                     <Link href={`/berita/${item.slug}`} className="block">
                       <h4 className="text-lg font-bold text-[#455d97] group-hover:text-[#bc000a] transition-colors leading-tight line-clamp-2">
                         {item.judul}
                       </h4>
                     </Link>
-                    
+
                     <p className="text-sm text-gray-600 line-clamp-3 mt-2 flex-grow">
                       {truncateText(item.isi)}
                     </p>
@@ -68,7 +76,9 @@ export default function Berita({ semuaBerita }: BeritaProps) {
               ))
             ) : (
               <div className="col-span-1 md:col-span-3 text-center py-10">
-                <p className="text-gray-500">Belum ada berita atau pengumuman saat ini.</p>
+                <p className="text-gray-500">
+                  Belum ada berita atau pengumuman saat ini.
+                </p>
               </div>
             )}
           </div>

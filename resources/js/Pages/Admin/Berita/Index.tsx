@@ -26,8 +26,8 @@ export default function Index({ berita, totalBerita }: IndexProps) {
   };
 
   return (
-    <AdminLayout 
-      title="Manajemen Berita" 
+    <AdminLayout
+      title="Manajemen Berita"
       subtitle="Kelola publikasi berita, informasi, dan pengumuman praktikum."
     >
       <Head title="Manajemen Berita" />
@@ -36,10 +36,16 @@ export default function Index({ berita, totalBerita }: IndexProps) {
       <section className="p-8">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="academic-card p-6 rounded-xl flex flex-col justify-center border border-gray-200 md:col-span-1 shadow-sm bg-white">
-            <span className="font-mono text-[12px] text-gray-500 uppercase tracking-wider">Total Berita</span>
+            <span className="font-mono text-[12px] text-gray-500 uppercase tracking-wider">
+              Total Berita
+            </span>
             <div className="flex items-baseline gap-2 mt-2">
-              <span className="text-4xl font-bold text-[#203971]">{totalBerita}</span>
-              <span className="text-gray-600 text-sm font-medium">Berita dipublikasi</span>
+              <span className="text-4xl font-bold text-[#203971]">
+                {totalBerita}
+              </span>
+              <span className="text-gray-600 text-sm font-medium">
+                Berita dipublikasi
+              </span>
             </div>
           </div>
         </div>
@@ -48,28 +54,33 @@ export default function Index({ berita, totalBerita }: IndexProps) {
       {/* News Table List */}
       <section className="px-8 pb-12">
         <div className="academic-card rounded-xl overflow-hidden border border-gray-200 bg-white shadow-sm">
-          
           {/* Table Header & Actions */}
           <div className="p-6 border-b border-gray-200 flex flex-col md:flex-row justify-between items-start md:items-center bg-gray-50/50 gap-4">
             <h4 className="text-xl font-bold text-[#203971]">Daftar Berita</h4>
-            
+
             <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
-              <form onSubmit={handleSearch} className="relative flex items-center w-full sm:w-64">
-                <span className="material-symbols-outlined absolute left-3 text-gray-400 text-[18px]">search</span>
-                <input 
-                  type="text" 
+              <form
+                onSubmit={handleSearch}
+                className="relative flex items-center w-full sm:w-64"
+              >
+                <span className="material-symbols-outlined absolute left-3 text-gray-400 text-[18px]">
+                  search
+                </span>
+                <input
+                  type="text"
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  placeholder="Cari judul berita..." 
+                  placeholder="Cari judul berita..."
                   className="pl-9 pr-4 py-2 w-full border border-gray-300 rounded text-sm focus:outline-none focus:border-[#203971] focus:ring-1 focus:ring-[#203971] transition-all"
                 />
               </form>
 
-              <Link 
-                href="/admin/berita/create" 
+              <Link
+                href="/admin/berita/create"
                 className="bg-[#203971] text-white px-4 py-2 text-sm font-bold rounded flex items-center justify-center gap-2 hover:bg-[#152a55] transition-all whitespace-nowrap"
               >
-                <span className="material-symbols-outlined text-sm">add</span> Buat Berita
+                <span className="material-symbols-outlined text-sm">add</span>{' '}
+                Buat Berita
               </Link>
             </div>
           </div>
@@ -89,23 +100,40 @@ export default function Index({ berita, totalBerita }: IndexProps) {
               <tbody className="divide-y divide-gray-100">
                 {berita.data.length > 0 ? (
                   berita.data.map((item) => (
-                    <tr key={item.id} className="group hover:bg-gray-50 transition-colors">
+                    <tr
+                      key={item.id}
+                      className="group hover:bg-gray-50 transition-colors"
+                    >
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-4">
                           <div className="w-12 h-12 rounded bg-gray-100 border border-gray-200 flex-shrink-0 overflow-hidden">
                             {item.thumbnail ? (
-                              <img src={`/storage/${item.thumbnail}`} className="w-full h-full object-cover" alt={item.judul} />
+                              <img
+                                src={`/storage/${item.thumbnail}`}
+                                className="w-full h-full object-cover"
+                                alt={item.judul}
+                              />
                             ) : (
-                              <img src="https://via.placeholder.com/150" className="w-full h-full object-cover" alt="Placeholder" />
+                              <img
+                                src="https://via.placeholder.com/150"
+                                className="w-full h-full object-cover"
+                                alt="Placeholder"
+                              />
                             )}
                           </div>
                           <div>
-                            <div className="text-base font-bold text-[#203971]">{item.judul}</div>
-                            <div className="text-sm text-gray-500 w-48 truncate">{truncateText(item.isi)}</div>
+                            <div className="text-base font-bold text-[#203971]">
+                              {item.judul}
+                            </div>
+                            <div className="text-sm text-gray-500 w-48 truncate">
+                              {truncateText(item.isi)}
+                            </div>
                           </div>
                         </div>
                       </td>
-                      <td className="px-6 py-4 text-gray-700 text-sm">{item.author}</td>
+                      <td className="px-6 py-4 text-gray-700 text-sm">
+                        {item.author}
+                      </td>
                       <td className="px-6 py-4">
                         <span className="px-3 py-1 bg-blue-50 border border-blue-200 text-[#203971] rounded-full text-xs font-mono uppercase font-semibold">
                           {item.kategori || 'Umum'}
@@ -116,19 +144,23 @@ export default function Index({ berita, totalBerita }: IndexProps) {
                       </td>
                       <td className="px-6 py-4">
                         <div className="flex gap-2 justify-center">
-                          <Link 
-                            href={`/admin/berita/${item.id}/edit`} 
-                            className="p-2 text-gray-400 hover:text-[#203971] transition-colors bg-white border border-gray-200 rounded shadow-sm hover:shadow" 
+                          <Link
+                            href={`/admin/berita/${item.id}/edit`}
+                            className="p-2 text-gray-400 hover:text-[#203971] transition-colors bg-white border border-gray-200 rounded shadow-sm hover:shadow"
                             title="Edit"
                           >
-                            <span className="material-symbols-outlined text-sm">edit</span>
+                            <span className="material-symbols-outlined text-sm">
+                              edit
+                            </span>
                           </Link>
-                          <button 
-                            onClick={() => handleDelete(item.id)} 
-                            className="p-2 text-gray-400 hover:text-[#F32923] transition-colors bg-white border border-gray-200 rounded shadow-sm hover:shadow" 
+                          <button
+                            onClick={() => handleDelete(item.id)}
+                            className="p-2 text-gray-400 hover:text-[#F32923] transition-colors bg-white border border-gray-200 rounded shadow-sm hover:shadow"
                             title="Hapus"
                           >
-                            <span className="material-symbols-outlined text-sm">delete</span>
+                            <span className="material-symbols-outlined text-sm">
+                              delete
+                            </span>
                           </button>
                         </div>
                       </td>
@@ -136,7 +168,10 @@ export default function Index({ berita, totalBerita }: IndexProps) {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan={5} className="px-6 py-8 text-center text-gray-500">
+                    <td
+                      colSpan={5}
+                      className="px-6 py-8 text-center text-gray-500"
+                    >
                       Belum ada berita yang diterbitkan.
                     </td>
                   </tr>
@@ -156,10 +191,9 @@ export default function Index({ berita, totalBerita }: IndexProps) {
                 Menampilkan 0 Berita
               </span>
             )}
-            
+
             <Pagination links={berita.links} />
           </div>
-
         </div>
       </section>
     </AdminLayout>

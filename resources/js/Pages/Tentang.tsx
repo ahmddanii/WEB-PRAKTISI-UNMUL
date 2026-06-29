@@ -31,7 +31,10 @@ interface TentangProps {
   koordinatorMatkul: KoordinatorMatkul[];
 }
 
-export default function Tentang({ pengurusInti, koordinatorMatkul }: TentangProps) {
+export default function Tentang({
+  pengurusInti,
+  koordinatorMatkul,
+}: TentangProps) {
   return (
     <AppLayout>
       <Head title="Tentang Kami" />
@@ -44,7 +47,10 @@ export default function Tentang({ pengurusInti, koordinatorMatkul }: TentangProp
                 Tentang Kami
               </h1>
               <p className="text-lg text-gray-600 leading-relaxed mb-6 max-w-3xl mx-auto">
-                Praktikum Sistem Informasi adalah kegiatan pendidikan yang memberikan kesempatan kepada mahasiswa untuk mempraktikkan dan mengaplikasikan teori-teori yang telah dipelajari dalam mata kuliah Sistem Informasi ke dalam situasi nyata.
+                Praktikum Sistem Informasi adalah kegiatan pendidikan yang
+                memberikan kesempatan kepada mahasiswa untuk mempraktikkan dan
+                mengaplikasikan teori-teori yang telah dipelajari dalam mata
+                kuliah Sistem Informasi ke dalam situasi nyata.
               </p>
             </div>
           </div>
@@ -55,10 +61,13 @@ export default function Tentang({ pengurusInti, koordinatorMatkul }: TentangProp
 
       <section className="py-5 pb-10 bg-gray-50">
         <div className="max-w-[1280px] mx-auto px-6 md:px-8">
-
           <div className="text-center mb-12">
-            <span className="font-mono text-xs font-bold text-[#455d97] uppercase tracking-widest">STRUKTUR KEPENGURUSAN</span>
-            <h2 className="text-4xl font-extrabold text-[#203971] mt-2 tracking-tight">INTI PRAKTISI</h2>
+            <span className="font-mono text-xs font-bold text-[#455d97] uppercase tracking-widest">
+              STRUKTUR KEPENGURUSAN
+            </span>
+            <h2 className="text-4xl font-extrabold text-[#203971] mt-2 tracking-tight">
+              INTI PRAKTISI
+            </h2>
             <div className="h-1 w-16 bg-[#455d97] mx-auto mt-3"></div>
           </div>
 
@@ -77,7 +86,11 @@ export default function Tentang({ pengurusInti, koordinatorMatkul }: TentangProp
                     </div> */}
                     {/* Praktisi - Belakang Tengah */}
                     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none opacity-[0.05] transition-all duration-700 group-hover:scale-110 group-hover:-rotate-3 w-[120%] flex items-center justify-center">
-                      <img src="/images/praktisi_white.png" className="w-full h-auto max-w-none object-contain filter brightness-0 invert" alt="" />
+                      <img
+                        src="/images/praktisi_white.png"
+                        className="w-full h-auto max-w-none object-contain filter brightness-0 invert"
+                        alt=""
+                      />
                     </div>
 
                     {/* Photo */}
@@ -90,7 +103,9 @@ export default function Tentang({ pengurusInti, koordinatorMatkul }: TentangProp
                     ) : (
                       <div className="absolute inset-0 w-full h-full flex items-center justify-center bg-gradient-to-br from-[#e8ecf3] to-[#d5dbe8]">
                         <div className="w-20 h-20 rounded-full bg-white/60 border-2 border-[#203971]/10 flex items-center justify-center">
-                          <span className="material-symbols-outlined text-[#203971]/30 text-5xl">person</span>
+                          <span className="material-symbols-outlined text-[#203971]/30 text-5xl">
+                            person
+                          </span>
                         </div>
                       </div>
                     )}
@@ -101,8 +116,14 @@ export default function Tentang({ pengurusInti, koordinatorMatkul }: TentangProp
                     {/* Logo badge */}
                     <div className="absolute top-2.5 left-2.5 z-10">
                       <div className="flex items-center gap-1.5 bg-white/85 backdrop-blur-sm border border-gray-200/50 rounded-lg py-1 px-2 shadow-sm group-hover:bg-white group-hover:shadow-md transition-all duration-300">
-                        <img src="/images/logo.png" className="h-4 w-auto object-contain" alt="Praktisi Unmul" />
-                        <span className="text-[9px] font-bold text-[#203971] tracking-wider font-mono">PRAKTISI</span>
+                        <img
+                          src="/images/logo.png"
+                          className="h-4 w-auto object-contain"
+                          alt="Praktisi Unmul"
+                        />
+                        <span className="text-[9px] font-bold text-[#203971] tracking-wider font-mono">
+                          PRAKTISI
+                        </span>
                       </div>
                     </div>
 
@@ -124,14 +145,20 @@ export default function Tentang({ pengurusInti, koordinatorMatkul }: TentangProp
                   </div>
                 ))
               ) : (
-                <div className="col-span-4 text-center py-10 text-gray-400 italic">Belum ada data struktur inti.</div>
+                <div className="col-span-4 text-center py-10 text-gray-400 italic">
+                  Belum ada data struktur inti.
+                </div>
               )}
             </div>
 
             <div className="mt-24 w-full">
               <div className="text-center mb-12">
-                <span className="font-mono text-xs font-bold text-[#455d97] uppercase tracking-widest">KOORDINATOR</span>
-                <h2 className="text-4xl font-extrabold text-[#203971] mt-2 tracking-tight">MATA KULIAH</h2>
+                <span className="font-mono text-xs font-bold text-[#455d97] uppercase tracking-widest">
+                  KOORDINATOR
+                </span>
+                <h2 className="text-4xl font-extrabold text-[#203971] mt-2 tracking-tight">
+                  MATA KULIAH
+                </h2>
                 <div className="h-0.5 w-16 bg-[#455d97] mx-auto mt-2"></div>
               </div>
 
@@ -145,11 +172,19 @@ export default function Tentang({ pengurusInti, koordinatorMatkul }: TentangProp
                       {/* Background watermark logo */}
                       {/* Sistem Informasi - Kanan Atas */}
                       <div className="absolute -top-4 -right-4 pointer-events-none opacity-[0.05] transition-all duration-700 group-hover:scale-110 rotate-[15deg] group-hover:rotate-[20deg]">
-                        <img src="/images/sistem_informasi.png" className="w-48 h-48 object-contain filter brightness-0 invert" alt="" />
+                        <img
+                          src="/images/sistem_informasi.png"
+                          className="w-48 h-48 object-contain filter brightness-0 invert"
+                          alt=""
+                        />
                       </div>
                       {/* Praktisi - Belakang Tengah */}
                       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none opacity-[0.05] transition-all duration-700 group-hover:scale-110 group-hover:-rotate-3 w-[120%] flex items-center justify-center">
-                        <img src="/images/praktisi_white.png" className="w-full h-auto max-w-none object-contain filter brightness-0 invert" alt="" />
+                        <img
+                          src="/images/praktisi_white.png"
+                          className="w-full h-auto max-w-none object-contain filter brightness-0 invert"
+                          alt=""
+                        />
                       </div>
 
                       {/* Photo */}
@@ -162,7 +197,9 @@ export default function Tentang({ pengurusInti, koordinatorMatkul }: TentangProp
                       ) : (
                         <div className="absolute inset-0 w-full h-full flex items-center justify-center bg-gradient-to-br from-[#e8ecf3] to-[#d5dbe8]">
                           <div className="w-20 h-20 rounded-full bg-white/60 border-2 border-[#203971]/10 flex items-center justify-center">
-                            <span className="material-symbols-outlined text-[#203971]/30 text-4xl">person</span>
+                            <span className="material-symbols-outlined text-[#203971]/30 text-4xl">
+                              person
+                            </span>
                           </div>
                         </div>
                       )}
@@ -173,8 +210,14 @@ export default function Tentang({ pengurusInti, koordinatorMatkul }: TentangProp
                       {/* Logo badge */}
                       <div className="absolute top-2.5 left-2.5 z-10">
                         <div className="flex items-center gap-1.5 bg-white/85 backdrop-blur-sm border border-gray-200/50 rounded-lg py-1 px-2 shadow-sm group-hover:bg-white group-hover:shadow-md transition-all duration-300">
-                          <img src="/images/logo.png" className="h-4 w-auto object-contain" alt="Praktisi Unmul" />
-                          <span className="text-[9px] font-bold text-[#203971] tracking-wider font-mono">PRAKTISI</span>
+                          <img
+                            src="/images/logo.png"
+                            className="h-4 w-auto object-contain"
+                            alt="Praktisi Unmul"
+                          />
+                          <span className="text-[9px] font-bold text-[#203971] tracking-wider font-mono">
+                            PRAKTISI
+                          </span>
                         </div>
                       </div>
 
@@ -198,11 +241,12 @@ export default function Tentang({ pengurusInti, koordinatorMatkul }: TentangProp
                     </div>
                   ))
                 ) : (
-                  <div className="col-span-4 text-center py-10 text-gray-400 italic">Belum ada data koordinator mata kuliah.</div>
+                  <div className="col-span-4 text-center py-10 text-gray-400 italic">
+                    Belum ada data koordinator mata kuliah.
+                  </div>
                 )}
               </div>
             </div>
-
           </div>
         </div>
       </section>
