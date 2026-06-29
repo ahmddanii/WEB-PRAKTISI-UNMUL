@@ -1,16 +1,8 @@
-import React, { useState, useEffect } from "react";
-import { Head, Link } from "@inertiajs/react";
-import AppLayout from "../Layouts/AppLayout";
-
-interface Berita {
-    id: number;
-    judul: string;
-    slug: string;
-    isi: string;
-    thumbnail?: string;
-    kategori?: string;
-    created_at: string;
-}
+import React, { useState, useEffect } from 'react';
+import { Head, Link } from '@inertiajs/react';
+import AppLayout from '../Layouts/AppLayout';
+import { Berita } from '../types';
+import { formatDate, truncateText } from '../utils';
 
 interface BerandaProps {
     beritaTerbaru: Berita[];
@@ -54,27 +46,6 @@ export default function Beranda({ beritaTerbaru }: BerandaProps) {
         setCurrentImageIndex((prev) => (prev + 1) % heroImages.length);
         setIsAutoPlay(false);
         setTimeout(() => setIsAutoPlay(true), 10000);
-    };
-
-    const formatDate = (dateStr: string) => {
-        try {
-            const date = new Date(dateStr);
-            return date.toLocaleDateString("id-ID", {
-                day: "2-digit",
-                month: "short",
-                year: "numeric",
-            });
-        } catch (e) {
-            return dateStr;
-        }
-    };
-
-    const truncateText = (htmlStr: string, limit: number = 120) => {
-        const text = htmlStr.replace(/<[^>]*>/g, "");
-        if (text.length > limit) {
-            return text.slice(0, limit) + "...";
-        }
-        return text;
     };
 
     return (

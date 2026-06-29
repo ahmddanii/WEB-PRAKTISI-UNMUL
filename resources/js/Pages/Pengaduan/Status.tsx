@@ -1,6 +1,7 @@
 import React from 'react';
 import { Head, Link } from '@inertiajs/react';
 import AppLayout from '../../Layouts/AppLayout';
+import { getStatusColor } from '../../utils';
 
 interface PengaduanProps {
     pengaduan: {
@@ -24,16 +25,6 @@ interface PengaduanProps {
 }
 
 export default function Status({ pengaduan, downloadUrl }: PengaduanProps) {
-    const getStatusColor = (status: string) => {
-        switch (status) {
-            case 'Selesai':
-                return 'bg-emerald-500 text-white border-emerald-600';
-            case 'Diproses':
-                return 'bg-sky-500 text-white border-sky-600';
-            default:
-                return 'bg-amber-500 text-white border-amber-600';
-        }
-    };
 
     return (
         <AppLayout>

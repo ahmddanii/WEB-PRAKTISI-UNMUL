@@ -1,6 +1,7 @@
 import React from 'react';
 import { Head, Link } from '@inertiajs/react';
 import AppLayout from '../../Layouts/AppLayout';
+import { getStatusColor } from '../../utils';
 
 interface PengajuanProps {
     pengajuan: {
@@ -25,17 +26,6 @@ interface PengajuanProps {
 }
 
 export default function Status({ pengajuan, downloadUrl }: PengajuanProps) {
-    const getStatusColor = (status: string) => {
-        switch (status) {
-            case 'Disetujui':
-                return 'bg-emerald-500 text-white border-emerald-600';
-            case 'Ditolak':
-                return 'bg-rose-500 text-white border-rose-600';
-            default:
-                return 'bg-amber-500 text-white border-amber-600';
-        }
-    };
-
     const getStatusBadge = (status: string) => {
         switch (status) {
             case 'Disetujui':

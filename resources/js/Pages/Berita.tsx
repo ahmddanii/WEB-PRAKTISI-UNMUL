@@ -2,55 +2,14 @@ import React from 'react';
 import { Head, Link } from '@inertiajs/react';
 import AppLayout from '../Layouts/AppLayout';
 import Pagination from '../Components/Pagination';
-
-interface BeritaItem {
-  id: number;
-  judul: string;
-  slug: string;
-  isi: string;
-  thumbnail?: string;
-  kategori?: string;
-  created_at: string;
-}
-
-interface PaginatedBerita {
-  data: BeritaItem[];
-  links: {
-    url: string | null;
-    label: string;
-    active: boolean;
-  }[];
-  current_page: number;
-  last_page: number;
-  per_page: number;
-  total: number;
-}
+import { Berita, PaginatedResponse } from '../types';
+import { formatDate, truncateText } from '../utils';
 
 interface BeritaProps {
-  semuaBerita: PaginatedBerita;
+  semuaBerita: PaginatedResponse<Berita>;
 }
 
 export default function Berita({ semuaBerita }: BeritaProps) {
-  const formatDate = (dateStr: string) => {
-    try {
-      const date = new Date(dateStr);
-      return date.toLocaleDateString('id-ID', {
-        day: '2-digit',
-        month: 'short',
-        year: 'numeric',
-      });
-    } catch (e) {
-      return dateStr;
-    }
-  };
-
-  const truncateText = (htmlStr: string, limit: number = 120) => {
-    const text = htmlStr.replace(/<[^>]*>/g, '');
-    if (text.length > limit) {
-      return text.slice(0, limit) + '...';
-    }
-    return text;
-  };
 
   return (
     <AppLayout>

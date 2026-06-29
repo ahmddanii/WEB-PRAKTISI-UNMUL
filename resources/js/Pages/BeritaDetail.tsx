@@ -1,35 +1,14 @@
 import React from 'react';
 import { Head, Link } from '@inertiajs/react';
 import AppLayout from '../Layouts/AppLayout';
-
-interface Berita {
-  id: number;
-  judul: string;
-  slug: string;
-  isi: string;
-  thumbnail?: string;
-  kategori?: string;
-  author?: string;
-  created_at: string;
-}
+import { Berita } from '../types';
+import { formatDate } from '../utils';
 
 interface BeritaDetailProps {
   berita: Berita;
 }
 
 export default function BeritaDetail({ berita }: BeritaDetailProps) {
-  const formatDate = (dateStr: string) => {
-    try {
-      const date = new Date(dateStr);
-      return date.toLocaleDateString('id-ID', {
-        day: '2-digit',
-        month: 'short',
-        year: 'numeric',
-      });
-    } catch (e) {
-      return dateStr;
-    }
-  };
 
   return (
     <AppLayout>
