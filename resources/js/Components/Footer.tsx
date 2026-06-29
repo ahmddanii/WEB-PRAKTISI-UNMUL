@@ -3,7 +3,7 @@ import { Link } from "@inertiajs/react";
 
 export default function Footer() {
     return (
-        <footer className="bg-[#0d1730] text-white pt-16 pb-8 border-t border-[#203971]/20">
+        <footer className="bg-gray-900 text-white pt-16 pb-8 border-t border-[#203971]/20">
             <div className="max-w-[1280px] mx-auto px-6 md:px-8">
                 {/* Main Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
@@ -62,7 +62,7 @@ export default function Footer() {
 
                     {/* Column 2: Quick Links */}
                     <div className="flex flex-col space-y-4">
-                        <h3 className="text-base font-bold tracking-wider text-white uppercase border-l-2 border-[#455d97] pl-3">
+                        <h3 className="text-base font-bold tracking-wider text-white uppercase border-l-2 border-primary-light pl-3">
                             Menu
                         </h3>
                         <ul className="flex flex-col space-y-2.5 text-sm text-white/70">
@@ -103,7 +103,7 @@ export default function Footer() {
 
                     {/* Column 3: Services */}
                     <div className="flex flex-col space-y-4">
-                        <h3 className="text-base font-bold tracking-wider text-white uppercase border-l-2 border-[#455d97] pl-3">
+                        <h3 className="text-base font-bold tracking-wider text-white uppercase border-l-2 border-primary-light pl-3">
                             Layanan
                         </h3>
                         <ul className="flex flex-col space-y-2.5 text-sm text-white/70">
@@ -128,7 +128,7 @@ export default function Footer() {
 
                     {/* Column 4: Contact & Info */}
                     <div className="flex flex-col space-y-4">
-                        <h3 className="text-base font-bold tracking-wider text-white uppercase border-l-2 border-[#455d97] pl-3">
+                        <h3 className="text-base font-bold tracking-wider text-white uppercase border-l-2 border-primary-light pl-3">
                             Hubungi Kami
                         </h3>
                         <ul className="flex flex-col space-y-3 text-sm text-white/70">

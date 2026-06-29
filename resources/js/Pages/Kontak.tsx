@@ -9,7 +9,7 @@ export default function Kontak({ isPengaduanOpen = true }: { isPengaduanOpen?: b
 
       <main className="py-14 px-6 md:px-8 max-w-[1280px] mx-auto min-h-[80vh]">
         <section className="mb-10">
-          <h1 className="text-4xl md:text-5xl font-bold text-[#455d97] mb-4 tracking-tight">Kontak kami</h1>
+          <h1 className="text-4xl md:text-5xl font-bold text-primary-light mb-4 tracking-tight">Kontak kami</h1>
           <p className="text-base md:text-lg text-gray-600 max-w-2xl leading-relaxed">
             Jangan ragu untuk menghubungi kami melalui saluran yang tersedia.
           </p>
@@ -20,7 +20,7 @@ export default function Kontak({ isPengaduanOpen = true }: { isPengaduanOpen?: b
         <div className="sosmed-container max-w-[1024px] mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
 
-            <div className="rounded-xl p-6 text-white relative overflow-hidden flex flex-col justify-between min-h-[180px] shadow-md hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 group" style={{ backgroundColor: '#203971' }}>
+            <div className="rounded-xl p-6 text-white relative overflow-hidden flex flex-col justify-between min-h-[180px] shadow-md hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 group bg-primary">
               <div className="relative z-10">
                 <h3 className="text-xl font-bold mb-1.5">Chat Kami di Instagram</h3>
                 <p className="text-white/80 text-sm">Ikuti dan kirim pesan langsung ke akun Instagram kami</p>
@@ -41,7 +41,7 @@ export default function Kontak({ isPengaduanOpen = true }: { isPengaduanOpen?: b
               </svg>
             </div>
 
-            <div className="rounded-xl p-6 text-white relative overflow-hidden flex flex-col justify-between min-h-[180px] shadow-md hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 group" style={{ backgroundColor: '#e53935' }}>
+            <div className="rounded-xl p-6 text-white relative overflow-hidden flex flex-col justify-between min-h-[180px] shadow-md hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 group bg-error">
               <div className="relative z-10">
                 <h3 className="text-xl font-bold mb-1.5">Form Pengaduan</h3>
                 <p className="text-white/80 text-sm">Tempat untuk mengirimkan pengaduan atau masukan terkait praktikum</p>
@@ -61,7 +61,7 @@ export default function Kontak({ isPengaduanOpen = true }: { isPengaduanOpen?: b
               <img src="/images/praktisi_white.png" alt="" className="absolute -bottom-20 -right-10 w-56 h-56 object-contain opacity-10 -rotate-12 group-hover:scale-110 transition-transform duration-500 pointer-events-none" />
             </div>
 
-            <div className="rounded-xl p-6 text-white relative overflow-hidden flex flex-col justify-between min-h-[180px] shadow-md hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 group" style={{ backgroundColor: '#37474f' }}>
+            <div className="rounded-xl p-6 text-white relative overflow-hidden flex flex-col justify-between min-h-[180px] shadow-md hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 group bg-gray-700">
               <div className="relative z-10">
                 <h3 className="text-xl font-bold mb-1.5">Kunjungi GitHub</h3>
                 <p className="text-white/80 text-sm">Lihat source code, dokumentasi, dan proyek kami di GitHub</p>
@@ -84,7 +84,7 @@ export default function Kontak({ isPengaduanOpen = true }: { isPengaduanOpen?: b
               </svg>
             </div>
 
-            <div className="rounded-xl p-6 text-white relative overflow-hidden flex flex-col justify-between min-h-[180px] shadow-md hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 group" style={{ backgroundColor: '#5865F2' }}>
+            <div className="rounded-xl p-6 text-white relative overflow-hidden flex flex-col justify-between min-h-[180px] shadow-md hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 group bg-indigo-600">
               <div className="relative z-10">
                 <h3 className="text-xl font-bold mb-1.5">Gabung Server Discord</h3>
                 <p className="text-white/80 text-sm">Bergabung dengan komunitas kami di Discord untuk berdiskusi.</p>

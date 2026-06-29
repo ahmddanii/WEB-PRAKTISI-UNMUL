@@ -80,13 +80,13 @@ export default function Beranda({ beritaTerbaru }: BerandaProps) {
                 <div className="max-w-[1280px] w-full flex flex-col text-center items-center z-10">
                     <div className="space-y-6 flex flex-col items-center">
                         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-outline-variant shadow-sm">
-                            <span className="w-2 h-2 rounded-full bg-[#bc000a]"></span>
+                            <span className="w-2 h-2 rounded-full bg-error"></span>
                             <span className="text-xs font-bold uppercase tracking-widest text-gray-600">
                                 Tahun Akademik 2025/2026
                             </span>
                         </div>
 
-                        <h1 className="text-4xl md:text-5xl font-bold text-[#455d97] max-w-3xl leading-tight [text-shadow:_0_2px_8px_rgb(255_255_255_/_80%)]">
+                        <h1 className="text-4xl md:text-5xl font-bold text-primary-light max-w-3xl leading-tight [text-shadow:_0_2px_8px_rgb(255_255_255_/_80%)]">
                             Selamat datang di Web Praktikum Sistem Informasi
                         </h1>
 
@@ -99,7 +99,7 @@ export default function Beranda({ beritaTerbaru }: BerandaProps) {
                         <div className="flex flex-wrap gap-4 justify-center pt-4">
                             <a
                                 href="#layanan"
-                                className="bg-[#455d97] text-white px-6 py-3 font-bold hover:shadow-lg transition-all rounded flex items-center gap-2"
+                                className="bg-primary-light text-white px-6 py-3 font-bold hover:shadow-lg transition-all rounded flex items-center gap-2"
                             >
                                 Lihat Layanan{" "}
                                 <span className="material-symbols-outlined">
@@ -108,7 +108,7 @@ export default function Beranda({ beritaTerbaru }: BerandaProps) {
                             </a>
                             <Link
                                 href="/dokumen"
-                                className="border-2 border-[#455d97] text-[#455d97] px-6 py-3 font-bold hover:bg-[#455d97] hover:text-white transition-all rounded"
+                                className="border-2 border-primary-light text-primary-light px-6 py-3 font-bold hover:bg-primary-light hover:text-white transition-all rounded"
                             >
                                 Panduan Praktikan
                             </Link>
@@ -120,7 +120,7 @@ export default function Beranda({ beritaTerbaru }: BerandaProps) {
             {/* Layanan Section */}
             <section id="layanan" className="py-16 px-8 max-w-[1280px] mx-auto">
                 <div className="flex flex-col items-center text-center mb-12">
-                    <h2 className="text-3xl text-[#455d97] mb-3 font-bold">
+                    <h2 className="text-3xl text-primary-light mb-3 font-bold">
                         Layanan yang Tersedia
                     </h2>
                     <p className="text-gray-600 max-w-2xl">
@@ -131,10 +131,10 @@ export default function Beranda({ beritaTerbaru }: BerandaProps) {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
                     <div className="bg-white p-6 rounded-2xl flex flex-col items-center text-center transition-all hover:shadow-lg border border-gray-200">
-                        <span className="material-symbols-outlined text-4xl text-[#ba1a1a] mb-4">
+                        <span className="material-symbols-outlined text-4xl text-error mb-4">
                             calendar_month
                         </span>
-                        <h4 className="text-lg text-[#455d97] font-bold mb-2">
+                        <h4 className="text-lg text-primary-light font-bold mb-2">
                             Jadwal Praktikum
                         </h4>
                         <p className="text-sm text-gray-600 mb-6 flex-grow">
@@ -142,17 +142,17 @@ export default function Beranda({ beritaTerbaru }: BerandaProps) {
                         </p>
                         <Link
                             href="/jadwal"
-                            className="bg-[#203971] text-white px-6 py-2 rounded-lg font-bold hover:bg-opacity-90 transition-all w-full text-center"
+                            className="bg-primary text-white px-6 py-2 rounded-lg font-bold hover:bg-opacity-90 transition-all w-full text-center"
                         >
                             Lihat
                         </Link>
                     </div>
 
                     <div className="bg-white p-6 rounded-2xl flex flex-col items-center text-center transition-all hover:shadow-lg border border-gray-200">
-                        <span className="material-symbols-outlined text-4xl text-[#ba1a1a] mb-4">
+                        <span className="material-symbols-outlined text-4xl text-error mb-4">
                             gavel
                         </span>
-                        <h4 className="text-lg text-[#455d97] font-bold mb-2">
+                        <h4 className="text-lg text-primary-light font-bold mb-2">
                             Peraturan Praktikum
                         </h4>
                         <p className="text-sm text-gray-600 mb-6 flex-grow">
@@ -160,17 +160,17 @@ export default function Beranda({ beritaTerbaru }: BerandaProps) {
                         </p>
                         <Link
                             href="/dokumen"
-                            className="bg-[#203971] text-white px-6 py-2 rounded-lg font-bold hover:bg-opacity-90 transition-all w-full text-center"
+                            className="bg-primary text-white px-6 py-2 rounded-lg font-bold hover:bg-opacity-90 transition-all w-full text-center"
                         >
                             Lihat
                         </Link>
                     </div>
 
                     <div className="bg-white p-6 rounded-2xl flex flex-col items-center text-center transition-all hover:shadow-lg border border-gray-200">
-                        <span className="material-symbols-outlined text-4xl text-[#ba1a1a] mb-4">
+                        <span className="material-symbols-outlined text-4xl text-error mb-4">
                             newspaper
                         </span>
-                        <h4 className="text-lg text-[#455d97] font-bold mb-2">
+                        <h4 className="text-lg text-primary-light font-bold mb-2">
                             Berita & Pengumuman
                         </h4>
                         <p className="text-sm text-gray-600 mb-6 flex-grow">
@@ -179,17 +179,17 @@ export default function Beranda({ beritaTerbaru }: BerandaProps) {
                         </p>
                         <Link
                             href="/berita"
-                            className="bg-[#203971] text-white px-6 py-2 rounded-lg font-bold hover:bg-opacity-90 transition-all w-full text-center"
+                            className="bg-primary text-white px-6 py-2 rounded-lg font-bold hover:bg-opacity-90 transition-all w-full text-center"
                         >
                             Lihat
                         </Link>
                     </div>
 
                     <div className="bg-white p-6 rounded-2xl flex flex-col items-center text-center transition-all hover:shadow-lg border border-gray-200">
-                        <span className="material-symbols-outlined text-4xl text-[#ba1a1a] mb-4">
+                        <span className="material-symbols-outlined text-4xl text-error mb-4">
                             mail
                         </span>
-                        <h4 className="text-lg text-[#455d97] font-bold mb-2">
+                        <h4 className="text-lg text-primary-light font-bold mb-2">
                             Kontak Kami
                         </h4>
                         <p className="text-sm text-gray-600 mb-6 flex-grow">
@@ -198,17 +198,17 @@ export default function Beranda({ beritaTerbaru }: BerandaProps) {
                         </p>
                         <Link
                             href="/kontak"
-                            className="bg-[#203971] text-white px-6 py-2 rounded-lg font-bold hover:bg-opacity-90 transition-all w-full text-center"
+                            className="bg-primary text-white px-6 py-2 rounded-lg font-bold hover:bg-opacity-90 transition-all w-full text-center"
                         >
                             Lihat
                         </Link>
                     </div>
 
                     <div className="bg-white p-6 rounded-2xl flex flex-col items-center text-center transition-all hover:shadow-lg border border-gray-200">
-                        <span className="material-symbols-outlined text-4xl text-[#ba1a1a] mb-4">
+                        <span className="material-symbols-outlined text-4xl text-error mb-4">
                             description
                         </span>
-                        <h4 className="text-lg text-[#455d97] font-bold mb-2">
+                        <h4 className="text-lg text-primary-light font-bold mb-2">
                             Pengajuan Surat
                         </h4>
                         <p className="text-sm text-gray-600 mb-6 flex-grow">
@@ -217,7 +217,7 @@ export default function Beranda({ beritaTerbaru }: BerandaProps) {
                         </p>
                         <Link
                             href="/pengajuan-surat"
-                            className="bg-[#203971] text-white px-6 py-2 rounded-lg font-bold hover:bg-opacity-90 transition-all w-full text-center"
+                            className="bg-primary text-white px-6 py-2 rounded-lg font-bold hover:bg-opacity-90 transition-all w-full text-center"
                         >
                             Lihat
                         </Link>
@@ -226,14 +226,14 @@ export default function Beranda({ beritaTerbaru }: BerandaProps) {
             </section>
 
             {/* Berita Section */}
-            <section className="py-16 bg-[#f9f9f9]">
+            <section className="py-16 bg-gray-50">
                 <div className="max-w-[1280px] mx-auto px-8">
                     <div className="flex justify-between items-end mb-10">
-                        <h3 className="text-2xl md:text-3xl font-bold text-[#455d97]">
+                        <h3 className="text-2xl md:text-3xl font-bold text-primary-light">
                             Berita & Pengumuman
                         </h3>
                         <Link
-                            className="hidden md:block font-bold text-[#455d97] border-b-2 border-[#455d97] pb-1 hover:text-[#bc000a] transition-colors"
+                            className="hidden md:block font-bold text-primary-light border-b-2 border-primary-light pb-1 hover:text-error transition-colors"
                             href="/berita"
                         >
                             Lihat Semua Berita
@@ -267,7 +267,7 @@ export default function Beranda({ beritaTerbaru }: BerandaProps) {
                                     </Link>
 
                                     <div className="space-y-2 flex flex-col flex-grow">
-                                        <span className="text-[10px] text-[#bc000a] font-bold uppercase tracking-wider">
+                                        <span className="text-[10px] text-error font-bold uppercase tracking-wider">
                                             {item.kategori || "Umum"} •{" "}
                                             {formatDate(item.created_at)}
                                         </span>
@@ -276,7 +276,7 @@ export default function Beranda({ beritaTerbaru }: BerandaProps) {
                                             href={`/berita/${item.slug}`}
                                             className="block"
                                         >
-                                            <h4 className="text-lg font-bold text-[#455d97] group-hover:text-[#bc000a] transition-colors leading-tight line-clamp-2">
+                                            <h4 className="text-lg font-bold text-primary-light group-hover:text-error transition-colors leading-tight line-clamp-2">
                                                 {item.judul}
                                             </h4>
                                         </Link>
