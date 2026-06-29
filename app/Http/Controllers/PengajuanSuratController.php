@@ -140,4 +140,24 @@ class PengajuanSuratController extends Controller
         // Return secure inline view response
         return Storage::disk('local')->response($pengajuan->file_surat);
     }
+
+    /**
+     * Verify the authenticity of an approved letter via token.
+     */
+    public function verifikasiSurat($token)
+    {
+        $surat = PengajuanSurat::where('token', $token)
+            ->where('status', 'Disetujui')
+            ->first();
+
+        $downloadUrl = null;
+        if ($surat) {
+            $downloadUrl = route('surat.download', ['id' => $surat->id, 'token' => $surat->generateToken()]);
+        }
+
+        return inertia('PengajuanSurat/Verifikasi', [
+            'surat' => $surat,
+            'downloadUrl' => $downloadUrl,
+        ]);
+    }
 }

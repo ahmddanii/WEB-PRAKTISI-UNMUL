@@ -231,6 +231,15 @@ export default function Show({ surat, buktiUrl, suratUrl }: PengajuanProps) {
 
                                 {surat.status === 'Menunggu' && action === 'none' && (
                                     <div className="flex flex-col gap-2 pt-2">
+                                        <a
+                                            href={`/admin/pengajuan-surat/${surat.id}/preview`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2.5 rounded font-bold font-mono tracking-wider text-xs cursor-pointer transition-colors shadow-sm block text-center flex items-center justify-center gap-1.5"
+                                        >
+                                            <span className="material-symbols-outlined text-sm" style={{ fontSize: '16px' }}>visibility</span>
+                                            PRATINJAU SURAT (PREVIEW)
+                                        </a>
                                         <button
                                             onClick={() => setAction('approve')}
                                             className="w-full bg-emerald-500 hover:bg-emerald-600 text-white py-2.5 rounded font-bold font-mono tracking-wider text-xs cursor-pointer transition-colors shadow-sm"

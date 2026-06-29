@@ -14,8 +14,8 @@ class GoogleDriveService
     {
         try {
             // Cek apakah kredensial Google Drive disiapkan di konfigurasi / env
-            $clientJson = env('GOOGLE_DRIVE_SERVICE_ACCOUNT_JSON');
-            $folderId = env('GOOGLE_DRIVE_FOLDER_ID');
+            $clientJson = config('services.google_drive.service_account_json');
+            $folderId = config('services.google_drive.folder_id');
 
             if (empty($clientJson) || empty($folderId)) {
                 Log::info("Google Drive archiving skipped: GOOGLE_DRIVE_SERVICE_ACCOUNT_JSON or GOOGLE_DRIVE_FOLDER_ID not set in env.");
@@ -40,7 +40,7 @@ class GoogleDriveService
             } else {
                 $client->setAuthConfig(json_decode($clientJson, true));
             }
-            
+
             $client->addScope(\Google\Service\Drive::DRIVE_FILE);
             $service = new \Google\Service\Drive($client);
 
@@ -60,7 +60,6 @@ class GoogleDriveService
 
             Log::info("Successfully archived letter to Google Drive. File ID: " . $file->id);
             return $file->id;
-
         } catch (\Exception $e) {
             Log::error("Failed archiving to Google Drive: " . $e->getMessage());
             return false;

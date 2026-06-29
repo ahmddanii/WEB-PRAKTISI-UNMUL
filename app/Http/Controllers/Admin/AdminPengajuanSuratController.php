@@ -100,10 +100,14 @@ class AdminPengajuanSuratController extends Controller
 
         // Generate secure verification token & QR
         $token = hash('sha256', $surat->id . $surat->nim . config('app.key'));
-        $qrData = "PRAKTISI/SURAT/{$nomorSurat}/{$token}";
+        $qrData = route('surat.verifikasi', ['token' => $token]);
         
         $qrCode = base64_encode(
-            \SimpleSoftwareIO\QrCode\Facades\QrCode::format('svg')->size(90)->generate($qrData)
+            \SimpleSoftwareIO\QrCode\Facades\QrCode::format('svg')
+                ->errorCorrection('H')
+                ->merge(public_path('images/logo_clean.png'), 0.25, true)
+                ->size(150)
+                ->generate($qrData)
         );
 
         // Generate PDF
@@ -144,6 +148,52 @@ class AdminPengajuanSuratController extends Controller
 
         return redirect()->route('admin.surat.show', $surat->id)
             ->with('success', 'Pengajuan surat berhasil disetujui, PDF di-generate otomatis, dan email notifikasi telah dikirim.');
+    }
+
+    /**
+     * Preview the PDF letter layout without approving.
+     */
+    public function preview($id)
+    {
+        $surat = PengajuanSurat::findOrFail($id);
+
+        // Signature signer: Ahmad Dani (or Head of Lab)
+        $penandatangan = \App\Models\PengurusInti::where('nama', 'Ahmad Dani')->first()
+            ?? \App\Models\PengurusInti::where('jabatan', 'like', '%Head%')->first()
+            ?? \App\Models\PengurusInti::orderBy('urutan')->first();
+
+        if (!$penandatangan) {
+            return back()->with('error', 'Data penandatangan Ketua PI tidak ditemukan di database. Pastikan data pengurus terisi.');
+        }
+
+        // Generate Nomor Surat Otomatis (Simulation)
+        $bulanRomawi = ['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII'];
+        $count = PengajuanSurat::where('status', 'Disetujui')
+            ->whereYear('diproses_at', now()->year)
+            ->count();
+        $urutan = str_pad($count + 1, 3, '0', STR_PAD_LEFT);
+        $nomorSurat = "{$urutan}/PRAKTISI-SI/{$bulanRomawi[now()->month - 1]}/" . now()->year;
+
+        // Generate verification URL & QR for preview
+        $token = hash('sha256', $surat->id . $surat->nim . config('app.key'));
+        $qrData = route('surat.verifikasi', ['token' => $token]);
+        
+        $qrCode = base64_encode(
+            \SimpleSoftwareIO\QrCode\Facades\QrCode::format('svg')
+                ->errorCorrection('H')
+                ->merge(public_path('images/logo_clean.png'), 0.25, true)
+                ->size(150)
+                ->generate($qrData)
+        );
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('surat.izin-praktikum', [
+            'pengajuan' => $surat,
+            'penandatangan' => $penandatangan,
+            'nomorSurat' => $nomorSurat,
+            'qrCode' => $qrCode,
+        ]);
+
+        return $pdf->stream('Preview_Surat_Izin_' . $surat->nim . '.pdf');
     }
 
     /**

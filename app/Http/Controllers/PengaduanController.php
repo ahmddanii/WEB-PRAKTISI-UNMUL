@@ -7,6 +7,7 @@ use App\Models\MataKuliah;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
+use App\Models\Setting;
 
 class PengaduanController extends Controller
 {
@@ -15,7 +16,8 @@ class PengaduanController extends Controller
      */
     public function index()
     {
-        return inertia('Pengaduan/Form');
+        $isPengaduanOpen = Setting::where('key', 'pengaduan_is_open')->value('value') !== 'false';
+        return inertia('Pengaduan/Form', compact('isPengaduanOpen'));
     }
 
     /**
@@ -23,6 +25,11 @@ class PengaduanController extends Controller
      */
     public function store(Request $request)
     {
+        $isPengaduanOpen = Setting::where('key', 'pengaduan_is_open')->value('value') !== 'false';
+        if (!$isPengaduanOpen) {
+            abort(403, 'Form pengaduan saat ini sedang ditutup.');
+        }
+
         $request->validate([
             'kategori' => 'required|in:pengaduan,aspirasi',
             'angkatan' => 'required|integer|min:2000|max:' . (now()->year + 1),

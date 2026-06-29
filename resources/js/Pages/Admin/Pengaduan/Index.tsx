@@ -38,9 +38,10 @@ interface IndexProps {
         angkatan?: string;
         mata_kuliah_id?: string;
     };
+    isPengaduanOpen: boolean;
 }
 
-export default function Index({ pengaduans, mataKuliahs, filters }: IndexProps) {
+export default function Index({ pengaduans, mataKuliahs, filters, isPengaduanOpen }: IndexProps) {
     const [search, setSearch] = useState(filters.search || '');
     const [status, setStatus] = useState(filters.status || '');
     const [kategori, setKategori] = useState(filters.kategori || '');
@@ -125,6 +126,16 @@ export default function Index({ pengaduans, mataKuliahs, filters }: IndexProps) 
         return `/admin/pengaduan/presentasi?${params.toString()}`;
     };
 
+    const handleToggleForm = () => {
+        if (confirm(`Apakah Anda yakin ingin ${isPengaduanOpen ? 'menutup' : 'membuka'} form pengaduan?`)) {
+            router.post('/admin/pengaduan/toggle-status', {
+                is_open: !isPengaduanOpen
+            }, {
+                preserveScroll: true
+            });
+        }
+    };
+
     return (
         <AdminLayout
             title="Pengaduan & Aspirasi"
@@ -134,8 +145,33 @@ export default function Index({ pengaduans, mataKuliahs, filters }: IndexProps) 
 
             <section className="p-8">
                 
-                {/* Upper bar with presentation button */}
-                <div className="flex justify-end mb-6">
+                {/* Upper bar with presentation button and form toggle */}
+                <div className="flex justify-between items-center mb-6">
+                    <div className="flex items-center gap-4 bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+                        <div>
+                            <p className="text-sm font-semibold text-gray-700">Status Form Publik</p>
+                            <p className="text-xs text-gray-500 mt-1">
+                                {isPengaduanOpen 
+                                    ? 'Mahasiswa dapat mengisi form pengaduan'
+                                    : 'Form saat ini ditutup untuk mahasiswa'}
+                            </p>
+                        </div>
+                        <button
+                            onClick={handleToggleForm}
+                            className={`relative inline-flex h-7 w-12 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-[#203971] focus:ring-offset-2 ${
+                                isPengaduanOpen ? 'bg-green-500' : 'bg-gray-300'
+                            }`}
+                        >
+                            <span className="sr-only">Toggle form status</span>
+                            <span
+                                aria-hidden="true"
+                                className={`pointer-events-none inline-block h-6 w-6 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+                                    isPengaduanOpen ? 'translate-x-5' : 'translate-x-0'
+                                }`}
+                            />
+                        </button>
+                    </div>
+
                     <Link
                         href={getPresentasiUrl()}
                         className="inline-flex items-center gap-2 bg-[#203971] hover:bg-[#152a55] text-white px-5 py-2.5 rounded-lg text-xs font-bold font-mono tracking-widest transition-all shadow-sm cursor-pointer hover:-translate-y-0.5"

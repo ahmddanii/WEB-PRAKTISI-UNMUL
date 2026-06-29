@@ -12,10 +12,10 @@ class DatabaseSeeder extends Seeder
     {
         // Seeding default Admin
         User::create([
-            'name' => 'Admin Praktisi',
-            'username' => 'admin',
-            'email' => 'admin@praktisi.unmul.ac.id',
-            'password' => Hash::make('password'),
+            'name' => 'Admin Praktikum Sistem Informasi Unmul',
+            'username' => env('ADMIN_USERNAME', 'admin_praktikum'),
+            'email' => env('ADMIN_EMAIL', 'admpraktikumsiunmul@gmail.com'),
+            'password' => Hash::make(env('ADMIN_PASSWORD', 'password')),
         ]);
 
         // Call other seeders

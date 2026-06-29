@@ -70,12 +70,14 @@ export default function Tentang({ pengurusInti, koordinatorMatkul }: TentangProp
                     key={pi.id}
                     className="group relative aspect-[3/4] rounded-2xl overflow-hidden shadow-sm hover:shadow-xl hover:shadow-[#203971]/10 transition-all duration-500 hover:-translate-y-1.5 cursor-default bg-gradient-to-br from-[#203971] to-[#121c38]"
                   >
-                    {/* Background watermark logo (left and right) */}
-                    <div className="absolute top-8 left-[-24px] pointer-events-none opacity-[0.05] transition-all duration-700 group-hover:scale-110 rotate-[-15deg] group-hover:rotate-[-20deg]">
-                      <img src="/images/logo.png" className="w-50 h-50 object-contain filter brightness-0 invert" alt="" />
-                    </div>
-                    <div className="absolute top-8 right-[-24px] pointer-events-none opacity-[0.05] transition-all duration-700 group-hover:scale-110 rotate-[15deg] group-hover:rotate-[20deg]">
-                      <img src="/images/logo_clean.png" className="w-50 h-50 object-contain filter brightness-0 invert" alt="" />
+                    {/* Background watermark logo */}
+                    {/* Sistem Informasi - Kanan Atas */}
+                    {/* <div className="absolute -top-4 -right-4 pointer-events-none opacity-[0.05] transition-all duration-700 group-hover:scale-110 rotate-[15deg] group-hover:rotate-[20deg]">
+                      <img src="/images/sistem_informasi.png" className="w-48 h-48 object-contain filter brightness-0 invert" alt="" />
+                    </div> */}
+                    {/* Praktisi - Belakang Tengah */}
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none opacity-[0.05] transition-all duration-700 group-hover:scale-110 group-hover:-rotate-3 w-[120%] flex items-center justify-center">
+                      <img src="/images/praktisi_white.png" className="w-full h-auto max-w-none object-contain filter brightness-0 invert" alt="" />
                     </div>
 
                     {/* Photo */}
@@ -140,12 +142,14 @@ export default function Tentang({ pengurusInti, koordinatorMatkul }: TentangProp
                       key={km.id}
                       className="group relative aspect-[3/4] rounded-2xl overflow-hidden shadow-sm hover:shadow-xl hover:shadow-[#203971]/10 transition-all duration-500 hover:-translate-y-1.5 cursor-default bg-gradient-to-br from-[#203971] to-[#121c38]"
                     >
-                      {/* Background watermark logo (left and right) */}
-                      <div className="absolute top-8 left-[-24px] pointer-events-none opacity-[0.05] transition-all duration-700 group-hover:scale-110 rotate-[-15deg] group-hover:rotate-[-20deg]">
-                        <img src="/images/logo.png" className="w-36 h-36 object-contain filter brightness-0 invert" alt="" />
+                      {/* Background watermark logo */}
+                      {/* Sistem Informasi - Kanan Atas */}
+                      <div className="absolute -top-4 -right-4 pointer-events-none opacity-[0.05] transition-all duration-700 group-hover:scale-110 rotate-[15deg] group-hover:rotate-[20deg]">
+                        <img src="/images/sistem_informasi.png" className="w-48 h-48 object-contain filter brightness-0 invert" alt="" />
                       </div>
-                      <div className="absolute top-8 right-[-24px] pointer-events-none opacity-[0.05] transition-all duration-700 group-hover:scale-110 rotate-[15deg] group-hover:rotate-[20deg]">
-                        <img src="/images/logo_clean.png" className="w-36 h-36 object-contain filter brightness-0 invert" alt="" />
+                      {/* Praktisi - Belakang Tengah */}
+                      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none opacity-[0.05] transition-all duration-700 group-hover:scale-110 group-hover:-rotate-3 w-[120%] flex items-center justify-center">
+                        <img src="/images/praktisi_white.png" className="w-full h-auto max-w-none object-contain filter brightness-0 invert" alt="" />
                       </div>
 
                       {/* Photo */}

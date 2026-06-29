@@ -7,6 +7,7 @@ use App\Models\Pengaduan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
+use App\Models\Setting;
 
 class AdminPengaduanController extends Controller
 {
@@ -51,9 +52,12 @@ class AdminPengaduanController extends Controller
         $pengaduans = $query->orderBy('created_at', 'desc')->paginate(10)->withQueryString();
         $mataKuliahs = \App\Models\MataKuliah::orderBy('nama_mk')->get(['id', 'nama_mk']);
 
+        $isPengaduanOpen = Setting::where('key', 'pengaduan_is_open')->value('value') !== 'false';
+
         return inertia('Admin/Pengaduan/Index', [
             'pengaduans' => $pengaduans,
             'mataKuliahs' => $mataKuliahs,
+            'isPengaduanOpen' => $isPengaduanOpen,
             'filters' => $request->only(['search', 'status', 'kategori', 'angkatan', 'mata_kuliah_id'])
         ]);
     }
@@ -92,6 +96,24 @@ class AdminPengaduanController extends Controller
         }
 
         return back()->with('success', 'Pengaduan berhasil ditandai sebagai sudah dibahas.');
+    }
+
+    /**
+     * Toggle the open/close status of the Pengaduan form.
+     */
+    public function toggleStatus(Request $request)
+    {
+        $request->validate([
+            'is_open' => 'required|boolean'
+        ]);
+
+        Setting::updateOrCreate(
+            ['key' => 'pengaduan_is_open'],
+            ['value' => $request->is_open ? 'true' : 'false']
+        );
+
+        $status = $request->is_open ? 'dibuka' : 'ditutup';
+        return back()->with('success', "Form Pengaduan berhasil $status.");
     }
 
     /**

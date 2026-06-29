@@ -166,7 +166,7 @@ class PengurusController extends Controller
 
     private function handleImageUpload($file, $folder)
     {
-        $apiKey = env('REMOVE_BG_API_KEY');
+        $apiKey = config('services.remove_bg.api_key');
 
         if ($apiKey) {
             try {

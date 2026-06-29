@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Head, useForm, usePage } from '@inertiajs/react';
 import AppLayout from '../../Layouts/AppLayout';
 
-export default function Form() {
+export default function Form({ isPengaduanOpen = true }: { isPengaduanOpen?: boolean }) {
     const { props } = usePage();
     const successTicket = (props.flash as any)?.success_ticket;
 
@@ -86,9 +86,16 @@ export default function Form() {
 
                     {/* Form Container */}
                     <div className="bg-white border border-gray-200 rounded-2xl p-6 md:p-8 shadow-sm transition-all">
-                        <form onSubmit={handleSubmit} className="space-y-6">
+                        {!isPengaduanOpen ? (
+                            <div className="text-center py-10">
+                                <span className="material-symbols-outlined text-6xl text-gray-300 mb-4 block">lock</span>
+                                <h3 className="text-xl font-bold text-gray-700 mb-2">Form Pengaduan Ditutup</h3>
+                                <p className="text-gray-500">Mohon maaf, pengisian form pengaduan saat ini sedang ditutup oleh administrator.</p>
+                            </div>
+                        ) : (
+                            <form onSubmit={handleSubmit} className="space-y-6">
 
-                            {/* Kategori */}
+                                {/* Kategori */}
                             <div>
                                 <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Kategori</label>
                                 <select
@@ -238,6 +245,7 @@ export default function Form() {
                             </div>
 
                         </form>
+                        )}
                     </div>
 
                 </div>

@@ -35,4 +35,13 @@ return [
         ],
     ],
 
+    'remove_bg' => [
+        'api_key' => env('REMOVE_BG_API_KEY'),
+    ],
+
+    'google_drive' => [
+        'service_account_json' => env('GOOGLE_DRIVE_SERVICE_ACCOUNT_JSON'),
+        'folder_id' => env('GOOGLE_DRIVE_FOLDER_ID'),
+    ],
+
 ];
