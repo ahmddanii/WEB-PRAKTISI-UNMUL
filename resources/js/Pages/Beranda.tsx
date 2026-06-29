@@ -15,7 +15,8 @@ export default function Beranda({ beritaTerbaru }: BerandaProps) {
   const heroImages = [
     '/images/hero1.jpeg',
     '/images/hero2.jpeg',
-    '/images/hero3.jpg',
+    '/images/hero3.jpeg',
+    'images/hero4.jpg',
   ];
 
   useEffect(() => {
@@ -28,84 +29,94 @@ export default function Beranda({ beritaTerbaru }: BerandaProps) {
     return () => clearInterval(interval);
   }, [isAutoPlay, heroImages.length]);
 
-  const goToSlide = (index: number) => {
-    setCurrentImageIndex(index);
-    setIsAutoPlay(false);
-    setTimeout(() => setIsAutoPlay(true), 10000);
-  };
-
-  const goToPrevious = () => {
-    setCurrentImageIndex(
-      (prev) => (prev - 1 + heroImages.length) % heroImages.length
-    );
-    setIsAutoPlay(false);
-    setTimeout(() => setIsAutoPlay(true), 10000);
-  };
-
-  const goToNext = () => {
-    setCurrentImageIndex((prev) => (prev + 1) % heroImages.length);
-    setIsAutoPlay(false);
-    setTimeout(() => setIsAutoPlay(true), 10000);
-  };
-
   return (
     <AppLayout>
       <Head title="Beranda" />
 
       {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden px-8">
+      <section className="relative min-h-[100vh] flex items-center justify-center overflow-hidden px-8">
+        {/* Background Images with Parallax-like Overlay */}
         <div className="absolute inset-0">
           {heroImages.map((image, index) => (
             <div
               key={index}
-              className={`absolute inset-0 transition-opacity duration-2000 ease-in-out ${
+              className={`absolute inset-0 transition-opacity duration-[2000ms] ease-in-out ${
                 index === currentImageIndex ? 'opacity-100' : 'opacity-0'
               }`}
             >
               <div
-                className="absolute inset-0"
+                className="absolute inset-0 scale-110"
                 style={{
                   backgroundImage: `url(${image})`,
                   backgroundSize: 'cover',
                   backgroundPosition: 'center',
                 }}
               />
-              <div className="absolute inset-0 bg-gradient-to-b from-white/30 via-white/60 to-white/95" />
+              {/* Stronger overlay for better text readability, using primary colors */}
+              <div className="absolute inset-0 bg-gradient-to-b from-primary/60 via-primary/70 to-primary/80" />
             </div>
           ))}
+          {/* Radial gradient for decorative effect */}
+          <div className="absolute inset-0 hero-radial-gradient opacity-50" />
         </div>
 
+        {/* Decorative Blobs (adjusting colors to primary theme) */}
+        <div className="absolute top-20 right-0 w-96 h-96 bg-primary-light/10 rounded-full blur-3xl animate-[float_8s_ease-in-out_infinite]" />
+        <div className="absolute bottom-20 left-0 w-80 h-80 bg-primary/20 rounded-full blur-3xl animate-[float_10s_ease-in-out_infinite_reverse]" />
+
+        {/* Content */}
         <div className="max-w-[1280px] w-full flex flex-col text-center items-center z-10">
-          <div className="space-y-6 flex flex-col items-center">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-outline-variant shadow-sm">
-              <span className="w-2 h-2 rounded-full bg-error"></span>
-              <span className="text-xs font-bold uppercase tracking-widest text-gray-600">
+          <div className="space-y-8 flex flex-col items-center animate-[fade-in-up_0.8s_ease-out]">
+            {/* Badge */}
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-sm border-2 border-white/40 text-white shadow-lg shadow-primary/20">
+              <span className="w-2 h-2 rounded-full bg-white animate-pulse"></span>
+              <span className="text-xs font-bold uppercase tracking-widest">
                 Tahun Akademik 2025/2026
               </span>
             </div>
 
-            <h1 className="text-4xl md:text-5xl font-bold text-primary-light max-w-3xl leading-tight [text-shadow:_0_2px_8px_rgb(255_255_255_/_80%)]">
-              Selamat datang di Web Praktikum Sistem Informasi
+            {/* Heading */}
+            <h1 className="text-4xl md:text-6xl font-extrabold text-white max-w-4xl leading-[1.1] text-shadow">
+              Selamat Datang di{' '}
+              <span className="text-white">Web Praktikum</span>{' '}
+              <span className="relative">
+                Sistem Informasi
+                <svg
+                  className="absolute -bottom-2 left-0 w-full h-3 text-white/40"
+                  viewBox="0 0 100 12"
+                  preserveAspectRatio="none"
+                  fill="currentColor"
+                >
+                  <path d="M0 10 Q25 0 50 10 Q75 0 100 10 L100 12 L0 12 Z" />
+                </svg>
+              </span>
             </h1>
 
-            <p className="text-base md:text-lg text-gray-700 max-w-2xl [text-shadow:_0_1px_4px_rgb(255_255_255_/_80%)]">
+            {/* Subtitle */}
+            <p className="text-base md:text-lg text-white/90 max-w-2xl leading-relaxed text-shadow">
               Tempat mengakses berbagai informasi dan layanan terkait praktikum
               sistem informasi dengan mudah dan cepat.
             </p>
 
-            <div className="flex flex-wrap gap-4 justify-center pt-4">
+            {/* CTA Buttons */}
+            <div className="flex flex-wrap gap-4 justify-center pt-2">
               <a
                 href="#layanan"
-                className="bg-primary-light text-white px-6 py-3 font-bold hover:shadow-lg transition-all rounded flex items-center gap-2"
+                className="group bg-primary text-white px-8 py-4 font-bold rounded-2xl shadow-lg shadow-primary/30 hover:bg-primary-light hover:shadow-xl hover:shadow-primary/40 transition-all duration-300 flex items-center gap-2.5 active:scale-95"
               >
-                Lihat Layanan{' '}
-                <span className="material-symbols-outlined">arrow_forward</span>
+                <span>Lihat Layanan</span>
+                <span className="material-symbols-outlined text-xl group-hover:translate-x-1 transition-transform">
+                  arrow_forward
+                </span>
               </a>
               <Link
                 href="/dokumen"
-                className="border-2 border-primary-light text-primary-light px-6 py-3 font-bold hover:bg-primary-light hover:text-white transition-all rounded"
+                className="group bg-white/10 backdrop-blur-sm border-2 border-white/40 text-white px-8 py-4 font-bold rounded-2xl hover:bg-primary hover:border-primary hover:shadow-xl hover:shadow-primary/30 transition-all duration-300 flex items-center gap-2.5 active:scale-95"
               >
-                Panduan Praktikan
+                <span className="material-symbols-outlined text-xl">
+                  menu_book
+                </span>
+                <span>Panduan Praktikan</span>
               </Link>
             </div>
           </div>

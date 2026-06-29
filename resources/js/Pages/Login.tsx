@@ -24,9 +24,24 @@ export default function Login() {
       </div>
 
       <div className="w-full max-w-[1280px] px-6 py-8 flex flex-col items-center justify-center z-10">
-        <div className="w-full max-w-[440px] bg-white rounded-2xl p-8 sm:p-10 border border-gray-200 shadow-2xl shadow-gray-200/50">
-          <div className="mb-8 text-center">
-            <h2 className="text-2xl font-bold text-gray-800 mb-2">
+          <div className="w-full max-w-[440px] bg-white rounded-2xl p-8 sm:p-10 border border-gray-200 shadow-2xl shadow-gray-200/50">
+            <div className="mb-8 text-center">
+              <div className="flex items-center justify-center gap-3 mb-4">
+                <img
+                  alt="PRAKTISI Logo"
+                  className="h-14 w-auto object-contain"
+                  src="/images/logo.png"
+                />
+                <div className="flex flex-col items-start">
+                  <span className="font-bold text-primary tracking-tight text-2xl font-['Montserrat']">
+                    PRAKTISI
+                  </span>
+                  <span className="text-xs text-gray-500 font-medium">
+                    Praktikum Sistem Informasi
+                  </span>
+                </div>
+              </div>
+              <h2 className="text-2xl font-bold text-gray-800 mb-2">
               Selamat Datang
             </h2>
             <p className="text-gray-500 text-sm">

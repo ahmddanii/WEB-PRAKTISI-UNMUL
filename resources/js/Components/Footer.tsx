@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from '@inertiajs/react';
 
 export default function Footer() {
+  const [isLogoHovered, setIsLogoHovered] = useState(false);
+
   return (
     <footer className="bg-gray-900 text-white pt-16 pb-8 border-t border-[#203971]/20">
       <div className="max-w-[1280px] mx-auto px-6 md:px-8">
@@ -9,15 +11,33 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
           {/* Column 1: Brand & Description */}
           <div className="flex flex-col space-y-4">
-            <div className="flex items-center gap-3">
-              <img
-                alt="PRAKTISI Logo"
-                className="h-12 w-auto object-contain filter"
-                src="/images/praktisi_white.png"
-              />
-              <span className="font-semibold text-white tracking-tight text-2xl font-['Montserrat']">
-                PRAKTISI
-              </span>
+            <div
+              className="relative flex items-center gap-3"
+              onMouseEnter={() => setIsLogoHovered(true)}
+              onMouseLeave={() => setIsLogoHovered(false)}
+            >
+              <div className="relative h-9 w-9 flex-shrink-0">
+                <img
+                  alt="PRAKTISI Logo"
+                  className="absolute inset-0 h-full w-full object-contain transition-opacity duration-300"
+                  src="/images/logo.png"
+                  style={{ opacity: isLogoHovered ? 1 : 0 }}
+                />
+                <img
+                  alt="PRAKTISI Logo"
+                  className="absolute inset-0 h-full w-full object-contain transition-opacity duration-300"
+                  src="/images/praktisi_white.png"
+                  style={{ opacity: isLogoHovered ? 0 : 1 }}
+                />
+              </div>
+              <div className="flex flex-col">
+                <span className="font-bold text-white tracking-tight text-xl font-['Montserrat']">
+                  PRAKTISI
+                </span>
+                <span className="text-xs text-white/50 font-medium">
+                  Praktikum Sistem Informasi
+                </span>
+              </div>
             </div>
             <p className="text-white/70 leading-relaxed text-sm max-w-sm">
               Tempat mengakses berbagai informasi dan layanan terkait praktikum

@@ -1,8 +1,8 @@
 import React from 'react';
 import { Head, Link } from '@inertiajs/react';
-import AppLayout from '../Layouts/AppLayout';
-import { Berita } from '../types';
-import { formatDate } from '../utils';
+import AppLayout from '../../Layouts/AppLayout';
+import { Berita } from '../../types';
+import { formatDate } from '../../utils';
 
 interface BeritaDetailProps {
   berita: Berita;

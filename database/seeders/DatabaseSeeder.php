@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
             MataKuliahSeeder::class,
             RuanganSeeder::class,
             KelasPraktikumSeeder::class,
+            BeritaSeeder::class,
         ]);
     }
 }

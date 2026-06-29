@@ -1,15 +1,15 @@
 import React from 'react';
 import { Head, Link } from '@inertiajs/react';
-import AppLayout from '../Layouts/AppLayout';
-import Pagination from '../Components/Pagination';
-import { Berita, PaginatedResponse } from '../types';
-import { formatDate, truncateText } from '../utils';
+import AppLayout from '../../Layouts/AppLayout';
+import Pagination from '../../Components/Pagination';
+import { Berita, PaginatedResponse } from '../../types';
+import { formatDate, truncateText } from '../../utils';
 
 interface BeritaProps {
   semuaBerita: PaginatedResponse<Berita>;
 }
 
-export default function Berita({ semuaBerita }: BeritaProps) {
+export default function BeritaIndex({ semuaBerita }: BeritaProps) {
   return (
     <AppLayout>
       <Head title="Berita & Pengumuman" />

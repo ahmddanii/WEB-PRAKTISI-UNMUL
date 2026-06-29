@@ -14,6 +14,29 @@
     --color-success: #10b981;
     --color-warning: #f59e0b;
     --color-info: #3b82f6;
+
+    --duration-2000: 2000ms;
+    --duration-3000: 3000ms;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-20px) rotate(2deg); }
+}
+
+@keyframes pulse-soft {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 0.6; }
+}
+
+@keyframes bounce-down {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(8px); }
+}
+
+@keyframes fade-in-up {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 :root {
@@ -50,7 +73,7 @@ body {
     box-shadow: 0 4px 20px rgba(32, 57, 113, 0.08);
 }
 
-.hero-gradient {
-    background: radial-gradient(circle at top right, rgba(134, 223, 202, 0.1), transparent 40%),
-                radial-gradient(circle at bottom left, rgba(32, 57, 113, 0.05), transparent 40%);
+.hero-radial-gradient {
+    background: radial-gradient(circle at top right, rgba(32, 57, 113, 0.5), transparent 40%),
+                radial-gradient(circle at bottom left, rgba(69, 93, 151, 0.4), transparent 40%);
 }
