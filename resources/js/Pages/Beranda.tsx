@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Head, Link } from "@inertiajs/react";
 import AppLayout from "../Layouts/AppLayout";
 
@@ -17,6 +17,45 @@ interface BerandaProps {
 }
 
 export default function Beranda({ beritaTerbaru }: BerandaProps) {
+    const [currentImageIndex, setCurrentImageIndex] = useState(0);
+    const [isAutoPlay, setIsAutoPlay] = useState(true);
+
+    const heroImages = [
+        "/images/hero1.jpeg",
+        "/images/hero2.jpeg",
+        "/images/hero3.jpg",
+    ];
+
+    useEffect(() => {
+        if (!isAutoPlay) return;
+
+        const interval = setInterval(() => {
+            setCurrentImageIndex((prev) => (prev + 1) % heroImages.length);
+        }, 5000);
+
+        return () => clearInterval(interval);
+    }, [isAutoPlay, heroImages.length]);
+
+    const goToSlide = (index: number) => {
+        setCurrentImageIndex(index);
+        setIsAutoPlay(false);
+        setTimeout(() => setIsAutoPlay(true), 10000);
+    };
+
+    const goToPrevious = () => {
+        setCurrentImageIndex(
+            (prev) => (prev - 1 + heroImages.length) % heroImages.length,
+        );
+        setIsAutoPlay(false);
+        setTimeout(() => setIsAutoPlay(true), 10000);
+    };
+
+    const goToNext = () => {
+        setCurrentImageIndex((prev) => (prev + 1) % heroImages.length);
+        setIsAutoPlay(false);
+        setTimeout(() => setIsAutoPlay(true), 10000);
+    };
+
     const formatDate = (dateStr: string) => {
         try {
             const date = new Date(dateStr);
@@ -43,9 +82,32 @@ export default function Beranda({ beritaTerbaru }: BerandaProps) {
             <Head title="Beranda" />
 
             {/* Hero Section */}
-            <section className="relative py-16 md:py-40 flex items-center justify-center overflow-hidden hero-gradient px-8">
-                <div className="max-w-[1280px] w-full flex flex-col text-center items-center">
-                    <div className="space-y-6 z-10 flex flex-col items-center">
+            <section className="relative min-h-screen flex items-center justify-center overflow-hidden px-8">
+                <div className="absolute inset-0">
+                    {heroImages.map((image, index) => (
+                        <div
+                            key={index}
+                            className={`absolute inset-0 transition-opacity duration-2000 ease-in-out ${
+                                index === currentImageIndex
+                                    ? "opacity-100"
+                                    : "opacity-0"
+                            }`}
+                        >
+                            <div
+                                className="absolute inset-0"
+                                style={{
+                                    backgroundImage: `url(${image})`,
+                                    backgroundSize: "cover",
+                                    backgroundPosition: "center",
+                                }}
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-b from-white/30 via-white/60 to-white/95" />
+                        </div>
+                    ))}
+                </div>
+
+                <div className="max-w-[1280px] w-full flex flex-col text-center items-center z-10">
+                    <div className="space-y-6 flex flex-col items-center">
                         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-outline-variant shadow-sm">
                             <span className="w-2 h-2 rounded-full bg-[#bc000a]"></span>
                             <span className="text-xs font-bold uppercase tracking-widest text-gray-600">
@@ -53,11 +115,11 @@ export default function Beranda({ beritaTerbaru }: BerandaProps) {
                             </span>
                         </div>
 
-                        <h1 className="text-4xl md:text-5xl font-bold text-[#455d97] max-w-3xl leading-tight">
+                        <h1 className="text-4xl md:text-5xl font-bold text-[#455d97] max-w-3xl leading-tight [text-shadow:_0_2px_8px_rgb(255_255_255_/_80%)]">
                             Selamat datang di Web Praktikum Sistem Informasi
                         </h1>
 
-                        <p className="text-base md:text-lg text-gray-600 max-w-2xl">
+                        <p className="text-base md:text-lg text-gray-700 max-w-2xl [text-shadow:_0_1px_4px_rgb(255_255_255_/_80%)]">
                             Tempat mengakses berbagai informasi dan layanan
                             terkait praktikum sistem informasi dengan mudah dan
                             cepat.

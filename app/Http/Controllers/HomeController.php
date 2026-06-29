@@ -12,6 +12,6 @@ class HomeController extends Controller
             ->take(3)
             ->get();
 
-        return view('home', compact('beritaTerbaru'));
+        return inertia('Beranda', compact('beritaTerbaru'));
     }
 }
